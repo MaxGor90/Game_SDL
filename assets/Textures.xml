@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<textures>
+ <texture id="Knight" source="../assets/Knight/Knight.png" width="200" height="106"/>
+</textures>
