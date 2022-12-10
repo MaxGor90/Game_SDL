@@ -8,7 +8,7 @@
 class Enemy : public Character
 {
 public:
-    Enemy(ObjParams* params);
+    Enemy(std::shared_ptr<ObjParams> params);
     virtual ~Enemy();
     
     virtual void SetParams( const std::string& textureID, int spriteRow, int frameCount, 

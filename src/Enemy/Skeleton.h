@@ -8,7 +8,7 @@
 class Skeleton : public Enemy
 {
 public:
-    Skeleton(ObjParams* params);
+    Skeleton(std::shared_ptr<ObjParams> params);
     virtual ~Skeleton();
 
     

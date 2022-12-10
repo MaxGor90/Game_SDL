@@ -5,14 +5,14 @@
 #include "Animation.h"
 #include "RigidBody.h"
 #include "Collision.h"
-#include "Knight_params.h"
+
 
 
 
 class Knight : public Character
 {
 public:
-    Knight(ObjParams* params);
+    Knight(std::shared_ptr<ObjParams> params);
     virtual ~Knight();
     
     virtual void SetParams( const std::string& textureID, int spriteRow, int frameCount, 

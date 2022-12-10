@@ -5,19 +5,20 @@
 #include "Timer.h"
 #include "Global.h"
 #include "Engine.h"
+#include "Knight_params.h"
 
 
 
-Knight::Knight(ObjParams* params) : 
+Knight::Knight(std::shared_ptr<ObjParams> params) : 
     Character::Character(params)
 {
-    m_Animation = new Animation();
-    m_CollisionBox = new SDL_Rect({0,0,0,0});
-    m_CollisionBoxAtk = new SDL_Rect({0,0,0,0});
+    m_Animation = std::make_unique<Animation>();
+    m_CollisionBox = std::make_shared<SDL_Rect>(SDL_Rect{0,0,0,0});
+    m_CollisionBoxAtk = std::make_shared<SDL_Rect>(SDL_Rect{0,0,0,0});
 
     SetParams(m_TextureID, FALL_FRAME_ROW, FALL_FRAME_COUNT, FALL_FRAME_TIME, SDL_FLIP_NONE, FALL_FRAME_START);
     
-    m_RigidBody = new RigidBody();
+    m_RigidBody = std::make_unique<RigidBody>();
     
     m_Collision = Collision::GetInstance();
 }
@@ -25,11 +26,6 @@ Knight::Knight(ObjParams* params) :
 Knight::~Knight()
 {
     Clean();
-    delete m_Animation;
-    delete m_RigidBody;
-    delete m_Collision;
-    delete m_CollisionBox;
-    delete m_CollisionBoxAtk;
 }
 
 void Knight::SetParams( const std::string& textureID, int spriteRow, int frameCount, int frameTime, 

@@ -2,7 +2,8 @@
 #include "SDL.h"
 
 
-Timer* Timer::s_TimerInstance {nullptr};
+
+std::shared_ptr<Timer> Timer::s_TimerInstance {nullptr};
 
 
 void Timer::Tick()

@@ -6,14 +6,13 @@
 #include "Animation.h"
 #include "RigidBody.h"
 #include "Collision.h"
-
-
+#include <memory>
 
 
 class Character : public GameObject
 {
 public:
-    Character(ObjParams* params) :
+    Character(std::shared_ptr<ObjParams> params) :
         GameObject(params)
     {}
 
@@ -55,12 +54,12 @@ protected:
 
     bool m_IsInAir {true};
 
-    Animation* m_Animation {nullptr};
-    RigidBody* m_RigidBody {nullptr};
-    Collision* m_Collision {nullptr};
+    std::unique_ptr<Animation> m_Animation {nullptr};
+    std::unique_ptr<RigidBody> m_RigidBody {nullptr};
+    std::shared_ptr<Collision> m_Collision {nullptr};
 
-    SDL_Rect* m_CollisionBox{nullptr};
-    SDL_Rect* m_CollisionBoxAtk{nullptr};
+    std::shared_ptr<SDL_Rect> m_CollisionBox{nullptr};
+    std::shared_ptr<SDL_Rect> m_CollisionBoxAtk{nullptr};
 
     ComboState m_ComboState {NO};
     Direction m_Direction {forward};

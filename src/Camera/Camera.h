@@ -4,26 +4,26 @@
 #include "Vector2D.h"
 #include "Point.h"
 #include "SDL.h"
+#include "memory"
 
 
 class Camera
 {
-    Camera();
-    ~Camera(); 
-
-    static Camera* s_CameraInstance;
-    Point* m_Target;
+    static std::shared_ptr<Camera> s_CameraInstance;
+    std::shared_ptr<Point> m_Target;
     Vector2D m_Position;
     SDL_Rect m_Viewbox;
 
 public:
+    Camera();
+    ~Camera(); 
 
-    inline static Camera* getInstance()
+    inline static std::shared_ptr<Camera> getInstance()
     {
-        return s_CameraInstance = (s_CameraInstance == nullptr)? new Camera() : s_CameraInstance;
+        return s_CameraInstance = (s_CameraInstance == nullptr)? std::make_shared<Camera>() : s_CameraInstance;
     }
 
-    inline void SetTarget(Point* P) { m_Target = P; }
+    inline void SetTarget(std::shared_ptr<Point> P) { m_Target = P; }
     inline SDL_Rect GetViewbox() { return m_Viewbox; }
     inline Vector2D GetPosition() { return m_Position; }
 

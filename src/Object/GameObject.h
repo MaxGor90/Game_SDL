@@ -1,5 +1,5 @@
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+#ifndef H_GAMEOBJECT
+#define H_GAMEOBJECT
 
 #include "IObject.h"
 #include <string>
@@ -34,39 +34,36 @@ class GameObject : public IObject
 {
 public:
 
-    GameObject(ObjParams* params):
+    GameObject(std::shared_ptr<ObjParams> params):
         m_Width {params->Width},            //  Texture w
         m_Height {params->Height},          //  Texture h
         m_TextureID {params->TextureID},    //  Texture ID in map
         m_Flip {params->Flip}               //  Texture Flip
     {
-        m_Transform = new Transform(params->X, params->Y);  //  Object position
+        m_Transform = std::make_shared<Transform>(params->X, params->Y);  //  Object position
 
         float pos_x { m_Transform->m_X + params->Width / 2 };
         float pos_y { m_Transform->m_Y + params->Height / 2};
-        m_Position = new Point(pos_x, pos_y);
+        m_Position = std::make_shared<Point>(pos_x, pos_y);
     }
 
     virtual ~GameObject()
-    {
-        delete m_Transform;
-        delete m_Position;
-    }
+    {}
     
     virtual void Draw() = 0;
     virtual void Update(float dt) = 0;
     virtual void Clean() = 0;
 
-    inline Point* GetPosition() { return m_Position; }
+    inline std::shared_ptr<Point> GetPosition() { return m_Position; }
 
 protected:
 
-    Transform* m_Transform {nullptr};
+    std::shared_ptr<Transform> m_Transform {nullptr};
     int m_Width, m_Height;
     std::string m_TextureID;
     SDL_RendererFlip m_Flip;
-    Point* m_Position;
+    std::shared_ptr<Point> m_Position;
 
 };
 
-#endif /* GAMEOBJECT_H */
+#endif /* H_GAMEOBJECT */

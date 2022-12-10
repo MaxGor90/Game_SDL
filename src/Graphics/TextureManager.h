@@ -5,6 +5,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include <map>
+#include <memory>
 
 
 struct TextureParams
@@ -16,17 +17,17 @@ struct TextureParams
 
 class TextureManager
 {
-    TextureManager()
-    {}
-
-    ~TextureManager();
-    
-    static TextureManager* s_TextureManagerInstance;
+    static std::shared_ptr<TextureManager> s_TextureManagerInstance;
     std::map<std::string, TextureParams> m_TextureMap;
 
 public:
 
-    static TextureManager* getInstance();
+    TextureManager()
+    {}
+
+    ~TextureManager();
+
+    static std::shared_ptr<TextureManager> getInstance();
 
     bool Load(const std::string& id, const std::string& filename, int width, int height, double opacity = 1);  // Load texture into SDL_Surface -> SDL_Texture -> m_TextureMap
     bool LoadTextures(const char* fileSource);

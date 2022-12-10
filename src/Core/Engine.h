@@ -1,31 +1,32 @@
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef H_ENGINE
+#define H_ENGINE
 
 #include "SDL.h"
 #include "SDL_image.h"
 #include "GameMap.h"
+#include <memory>
 
 
 
 
 class Engine
 {
-    Engine();
-    ~Engine();
-
     SDL_Window* m_Window {nullptr};
     SDL_Renderer* m_Renderer {nullptr};
 
-    GameMap* m_LevelMap;
+    std::shared_ptr<GameMap> m_LevelMap;
 
-    static Engine* s_EngineInstance;
+    static std::shared_ptr<Engine> s_EngineInstance;
     bool m_isRunning;
 
 public:
 
-    static Engine* getInstance();   // Engine getter
+    Engine();
+    ~Engine();
 
-    GameMap* getMap()   { return m_LevelMap; };
+    static std::shared_ptr<Engine> getInstance();   // Engine getter
+
+    std::shared_ptr<GameMap> getMap()   { return m_LevelMap; };
     
 
     bool Init();                    
@@ -42,4 +43,4 @@ public:
 };
 
 
-#endif /* ENGINE_H */
+#endif /* H_ENGINE */

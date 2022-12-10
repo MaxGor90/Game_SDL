@@ -7,27 +7,27 @@
 #include "MapParser.h"
 #include "Camera.h"
 #include "Global.h"
+#include "Enemy.h"
 
 
 
 
 
-Engine* Engine::s_EngineInstance = nullptr;
-Knight* Player {nullptr};
+std::shared_ptr<Engine> Engine::s_EngineInstance {nullptr};
+std::unique_ptr<Knight> Player {nullptr};
+std::unique_ptr<Enemy> Skeleton {nullptr};
+
 
 Engine::Engine()
 {}
 
 Engine::~Engine()
-{
-    delete Player;
-    delete s_EngineInstance;
-}
+{}
 
-Engine* Engine::getInstance()
+std::shared_ptr<Engine> Engine::getInstance()
 {
     //  One instance of Engine must be running
-    return s_EngineInstance = (s_EngineInstance == nullptr)? new Engine() : s_EngineInstance;
+    return s_EngineInstance = (s_EngineInstance == nullptr)? std::make_shared<Engine>() : s_EngineInstance;
 }
 
 bool Engine::Init()
@@ -66,7 +66,7 @@ bool Engine::Init()
 
     // TextureManager::getInstance()->Load("Knight", "../assets/Knight/Knight.png",  200, 106);
 
-    Player = new Knight( new ObjParams( "Knight", 100, 100) );
+    Player = std::make_unique<Knight>( std::make_shared<ObjParams>( "Knight", 100, 100) );
 
     Camera::getInstance()->SetTarget(Player->GetPosition());
     

@@ -2,7 +2,7 @@
 #include "Engine.h"
 #include "Global.h"
 
-Camera* Camera::s_CameraInstance = nullptr;
+std::shared_ptr<Camera> Camera::s_CameraInstance = nullptr;
 
 
 Camera::Camera() : 
@@ -10,9 +10,7 @@ Camera::Camera() :
 {}
 
 Camera::~Camera()
-{
-    delete s_CameraInstance;
-}
+{}
 
 
 void Camera::Update(float dt)

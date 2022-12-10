@@ -1,9 +1,10 @@
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef H_INPUT
+#define H_INPUT
 
 
 #include <map>
 #include "SDL.h"
+#include <memory>
 
 
 
@@ -11,12 +12,7 @@
 class Input
 {
 private:
-    Input();
-    ~Input()
-    {
-        delete s_InputInstance;
-    }
-    static Input* s_InputInstance;
+    static std::shared_ptr<Input> s_InputInstance;
     void KeyUp();
     void KeyDown();
     void MouseKeyUp();
@@ -28,9 +24,14 @@ private:
     std::map<Uint8, Uint8> m_MouseButtonsState{};
 
 public:
-    static Input* getInstance()
+
+    Input();
+    ~Input()
+    {}
+
+    static std::shared_ptr<Input> getInstance()
     {
-        return s_InputInstance = (s_InputInstance == nullptr)? new Input() : s_InputInstance;
+        return s_InputInstance = (s_InputInstance == nullptr)? std::make_shared<Input>() : s_InputInstance;
     }    
 
     void Listen();
@@ -44,4 +45,4 @@ public:
 
 
 
-#endif /* INPUT_H */
+#endif /* H_INPUT */

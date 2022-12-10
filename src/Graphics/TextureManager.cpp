@@ -3,17 +3,15 @@
 #include "Camera.h"
 #include "tinyxml2.h"
 
-TextureManager* TextureManager::s_TextureManagerInstance = nullptr;
+std::shared_ptr<TextureManager> TextureManager::s_TextureManagerInstance = nullptr;
 
-TextureManager* TextureManager::getInstance()
+std::shared_ptr<TextureManager> TextureManager::getInstance()
 {
-    return  s_TextureManagerInstance = (s_TextureManagerInstance == nullptr)? new TextureManager() : s_TextureManagerInstance;
+    return  s_TextureManagerInstance = (s_TextureManagerInstance == nullptr)? std::make_shared<TextureManager>() : s_TextureManagerInstance;
 }
 
 TextureManager::~TextureManager()
-{
-    delete s_TextureManagerInstance;
-}
+{}
 
 bool TextureManager::Load(const std::string& id, const std::string& filename, int width, int height, double opacity)
 {

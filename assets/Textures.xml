@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <textures>
  <texture id="Knight" source="../assets/Knight/Knight.png" width="200" height="106"/>
+ <texture id="Skeleton" source="../assets/Skeleton/Skeleton.png" width="128" height="82"/>
 </textures>

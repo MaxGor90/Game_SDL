@@ -1,20 +1,21 @@
-#ifndef COLLISION_H
-#define COLLISION_H
+#ifndef H_COLLISION
+#define H_COLLISION
 
 #include "SDL.h"
 #include "TileLayer.h"
 #include <vector>
 #include "Transform.h"
+#include <memory>
 
 
 
 class Collision
 {
-    static Collision* s_CollisionInstance;
+    static std::shared_ptr<Collision> s_CollisionInstance;
 
 
-    std::vector<TileLayer*> m_CollisionLayers;
-    std::vector<TileMap*> m_CollisionMaps;
+    std::vector<std::shared_ptr<TileLayer>> m_CollisionLayers;
+    std::vector<std::shared_ptr<TileMap>> m_CollisionMaps;
 
 
 
@@ -22,21 +23,19 @@ public:
 
     Collision();
     ~Collision()
-    {
-        delete s_CollisionInstance;
-    }
+    {}
 
-    bool CheckCollision(SDL_Rect* rect_a, SDL_Rect* rect_b);
-    bool CollisionWithMapX(Transform** pos, SDL_Rect* r);
-    bool CollisionWithMapY(Transform** pos, SDL_Rect* r);
+    bool CheckCollision(std::shared_ptr<SDL_Rect> collisionBox1, std::shared_ptr<SDL_Rect> collisionBox2);
+    bool CollisionWithMapX(std::shared_ptr<Transform>* position, std::shared_ptr<SDL_Rect> collisionBox);
+    bool CollisionWithMapY(std::shared_ptr<Transform>* position, std::shared_ptr<SDL_Rect> collisionBox);
 
 
-    inline static Collision* GetInstance()  {
-        return s_CollisionInstance = (s_CollisionInstance == nullptr)? new Collision() : s_CollisionInstance;
+    inline static std::shared_ptr<Collision> GetInstance()  {
+        return s_CollisionInstance = (s_CollisionInstance == nullptr)? std::make_shared<Collision>() : s_CollisionInstance;
     }
 
 
 
 };
 
-#endif /* COLLISION_H */
+#endif /* H_COLLISION */

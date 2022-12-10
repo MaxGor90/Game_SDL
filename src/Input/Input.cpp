@@ -2,7 +2,8 @@
 #include "Engine.h"
 #include "Global.h"
 
-Input* Input::s_InputInstance = nullptr;
+
+std::shared_ptr<Input> Input::s_InputInstance = nullptr;
 
 Input::Input()
 {

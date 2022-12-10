@@ -21,7 +21,7 @@ class TileLayer : public Layer
 public:
     
     TileLayer(int tilesize, int rowcount, int colcount, const TileMap& tilemap, const TilesetList& tilesets, bool collision, bool front);
-    TileLayer(TileLayer* layer);
+    TileLayer(TileLayer&& layer);
     virtual void Render();
     virtual void Update();
 

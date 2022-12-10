@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-MapParser* MapParser::s_MapParserInstance {nullptr};
+std::shared_ptr<MapParser> MapParser::s_MapParserInstance {nullptr};
 
 
 
@@ -30,11 +30,11 @@ bool MapParser::Parse(const std::string& id, const char* sourceFile)
         tilesize { root->IntAttribute("tilewidth") };
 
 
-    GameMap* gamemap = new GameMap(colcount, rowcount, tilesize);
+    std::shared_ptr<GameMap> gamemap = std::make_shared<GameMap>(colcount, rowcount, tilesize);
 
     for (tinyxml2::XMLElement* el { root->FirstChildElement("imagelayer")}; el != nullptr; el = el->NextSiblingElement("imagelayer"))
     {
-        ImageLayer* imagelayer {ParseImageLayer(el)};
+        std::shared_ptr<ImageLayer> imagelayer {ParseImageLayer(el)};
         gamemap->m_MapLayers.push_back(imagelayer);
     }
 
@@ -46,7 +46,7 @@ bool MapParser::Parse(const std::string& id, const char* sourceFile)
 
     for (tinyxml2::XMLElement* el { root->FirstChildElement("layer") }; el != nullptr; el = el->NextSiblingElement("layer"))
     {
-        TileLayer* newLayer { ParseLayer(el, tilesets, tilesize, rowcount, colcount) };
+        std::shared_ptr<TileLayer> newLayer { ParseLayer(el, tilesets, tilesize, rowcount, colcount) };
         if (!newLayer->GetFront())
             gamemap->m_MapLayers.push_back(newLayer);
         else 
@@ -77,7 +77,7 @@ Tileset MapParser::ParseTileset(tinyxml2::XMLElement* xmlTileset)
     return tileset;
 }
 
-TileLayer* MapParser::ParseLayer(tinyxml2::XMLElement* xmlLayer, TilesetList& tilesets, int tilesize, int rowcount, int colcount)
+std::shared_ptr<TileLayer> MapParser::ParseLayer(tinyxml2::XMLElement* xmlLayer, TilesetList& tilesets, int tilesize, int rowcount, int colcount)
 {
     tinyxml2::XMLElement* data { xmlLayer->FirstChildElement("data") };
 
@@ -118,11 +118,11 @@ TileLayer* MapParser::ParseLayer(tinyxml2::XMLElement* xmlLayer, TilesetList& ti
             }
 
     }
-    return new TileLayer(tilesize, rowcount, colcount, tilemap, tilesets, collision, front);
+    return std::make_shared<TileLayer>(tilesize, rowcount, colcount, tilemap, tilesets, collision, front);
 }
 
 
-ImageLayer* MapParser::ParseImageLayer(tinyxml2::XMLElement* xmlImgLayer)
+std::shared_ptr<ImageLayer> MapParser::ParseImageLayer(tinyxml2::XMLElement* xmlImgLayer)
 {
     std::string Name { xmlImgLayer->Attribute("name") };
     std::string Source { xmlImgLayer->FirstChildElement("image")->Attribute("source") };
@@ -162,15 +162,15 @@ ImageLayer* MapParser::ParseImageLayer(tinyxml2::XMLElement* xmlImgLayer)
 
     Image img {width, height, Name, Source};
 
-    return new ImageLayer(img, opacity, repX, repY, offsetX, offsetY, speed);
+    return std::make_shared<ImageLayer>(img, opacity, repX, repY, offsetX, offsetY, speed);
 }
 
 
 void MapParser::Clean()
 {
-    std::map<std::string, GameMap*>::iterator it;
+    std::map<std::string, std::shared_ptr<GameMap>>::iterator it;
     for (it = m_MapDictionary.begin(); it != m_MapDictionary.end(); it++)
-        delete it->second;
+        it->second.reset();
 
     m_MapDictionary.clear();    
 }

@@ -1,8 +1,9 @@
-#ifndef GAMEMAP_H
-#define GAMEMAP_H
+#ifndef H_GAMEMAP
+#define H_GAMEMAP
 
 #include "Layer.h"
 #include <vector>
+#include <memory>
 
 
 class GameMap
@@ -44,15 +45,15 @@ public:
             m_MapLayersFront.at(i)->Update();
     }
 
-    std::vector<Layer*>& GetMapLayers() { return m_MapLayers; }
+    std::vector<std::shared_ptr<Layer>>& GetMapLayers() { return m_MapLayers; }
 
 
 private:
 
-    std::vector<Layer*> m_MapLayers;
-    std::vector<Layer*> m_MapLayersFront;
+    std::vector<std::shared_ptr<Layer>> m_MapLayers;
+    std::vector<std::shared_ptr<Layer>> m_MapLayersFront;
     friend class MapParser;
     int m_ColCount, m_RowCount, m_Tilesize;
 };
 
-#endif /* GAMEMAP_H */
+#endif /* H_GAMEMAP */
