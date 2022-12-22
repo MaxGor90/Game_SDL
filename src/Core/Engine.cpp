@@ -64,9 +64,8 @@ bool Engine::Init()
 
     TextureManager::getInstance()->LoadTextures("../assets/Textures.xml");
 
-    // TextureManager::getInstance()->Load("Knight", "../assets/Knight/Knight.png",  200, 106);
-
     Player = std::make_unique<Knight>( std::make_shared<ObjParams>( "Knight", 100, 100) );
+    // Skeleton = std::make_unique<Enemy>( std::make_shared<ObjParams>( "Skeleton", 500, 100) );
 
     Camera::getInstance()->SetTarget(Player->GetPosition());
     
@@ -88,6 +87,7 @@ void Engine::Update()
     float dt {Timer::getInstance()->GetDeltaTime()};
     m_LevelMap->Update();
     Player->Update(dt);
+    // Skeleton->Update(dt);
     m_LevelMap->UpdateFront();
     Camera::getInstance()->Update(dt);
 }
@@ -100,6 +100,7 @@ void Engine::Render()
     m_LevelMap->Render();
 
     Player->Draw();
+    // Skeleton->Draw();
 
     m_LevelMap->RenderFront();
 

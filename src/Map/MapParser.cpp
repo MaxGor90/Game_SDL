@@ -47,10 +47,12 @@ bool MapParser::Parse(const std::string& id, const char* sourceFile)
     for (tinyxml2::XMLElement* el { root->FirstChildElement("layer") }; el != nullptr; el = el->NextSiblingElement("layer"))
     {
         std::shared_ptr<TileLayer> newLayer { ParseLayer(el, tilesets, tilesize, rowcount, colcount) };
-        if (!newLayer->GetFront())
-            gamemap->m_MapLayers.push_back(newLayer);
-        else 
+        if (newLayer->GetFront())
             gamemap->m_MapLayersFront.push_back(newLayer);
+        else if (newLayer->GetCollision())
+            gamemap->m_MapCollisionLayers.push_back(newLayer);
+        else
+            gamemap->m_MapLayers.push_back(newLayer);
     }
 
     m_MapDictionary[id] = gamemap;

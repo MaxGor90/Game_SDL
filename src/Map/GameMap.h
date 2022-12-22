@@ -23,35 +23,42 @@ public:
     //  Render non-Front layers
     void Render()
     {
-        for (int i {0}; static_cast<std::size_t>(i) < m_MapLayers.size(); ++i)
-            m_MapLayers.at(i)->Render();
+        for (auto layer : m_MapLayers)
+            layer->Render();
+        for (auto layer : m_MapCollisionLayers)
+            layer->Render();
     }
     //  Render Front layers
     void RenderFront()
     {
-        for (int i {0}; static_cast<std::size_t>(i) < m_MapLayersFront.size(); ++i)
-            m_MapLayersFront.at(i)->Render();
+        for (auto layer : m_MapLayersFront)
+            layer->Render();
     }
     //  Update non-Front layers
     void Update()
     {
-        for (int i {0}; static_cast<std::size_t>(i) < m_MapLayers.size(); ++i)
-            m_MapLayers.at(i)->Update();
+        for (auto layer : m_MapLayers)
+            layer->Update();
+        for (auto layer : m_MapCollisionLayers)
+            layer->Update();
     }
     //  Update Front layers
     void UpdateFront()
     {
-        for (int i {0}; static_cast<std::size_t>(i) < m_MapLayersFront.size(); ++i)
-            m_MapLayersFront.at(i)->Update();
+        for (auto layer : m_MapLayersFront)
+            layer->Update();
     }
 
     std::vector<std::shared_ptr<Layer>>& GetMapLayers() { return m_MapLayers; }
+    std::vector<std::shared_ptr<Layer>>& GetMapCollisionLayers() { return m_MapCollisionLayers; }
+
 
 
 private:
 
     std::vector<std::shared_ptr<Layer>> m_MapLayers;
     std::vector<std::shared_ptr<Layer>> m_MapLayersFront;
+    std::vector<std::shared_ptr<Layer>> m_MapCollisionLayers;
     friend class MapParser;
     int m_ColCount, m_RowCount, m_Tilesize;
 };

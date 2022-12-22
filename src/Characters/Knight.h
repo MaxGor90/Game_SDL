@@ -15,8 +15,6 @@ public:
     Knight(std::shared_ptr<ObjParams> params);
     virtual ~Knight();
     
-    virtual void SetParams( const std::string& textureID, int spriteRow, int frameCount, 
-                            int frameTime, SDL_RendererFlip flip = SDL_FLIP_NONE, int startFrame = 0);
     
     virtual void Idle(float dt);
     virtual void Run(float dt);
@@ -30,11 +28,9 @@ public:
     virtual void Update(float dt);
     virtual void Clean();
 
-    void CheckDirectionSetParams(int spriteRow, int frameCount, int frameTime, int startFrame);
-    void CheckPosition();
+    void CheckDirectionSetParams(std::shared_ptr<AnimationSequence> animSeq);
     bool CheckCollisions();
     void PositionRecalc();
-    void CollisionBoxRecalc();
     void CollisionBoxAtkRecalc();
 
 protected:

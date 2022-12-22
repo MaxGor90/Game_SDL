@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <collision x="40" y="14" width="33" height="66"/>
+ <animations>
+  <animation name="idle" row="4" count="5" start="0" time="80"/>
+  <animation name="run" row="3" count="12" start="0" time="80"/>
+  <animation name="attack1" row="1" count="7" start="0" time="60" 
+             atkColX="27" atkColY="0" atkColW="101" atkColH="56"/>
+  <animation name="attack2" row="1" count="6" start="7" time="60" 
+             atkColX="4" atkColY="16" atkColW="124" atkColH="48"/>
+ </animations>
+</root>
+ 
