@@ -65,6 +65,7 @@ bool TextureManager::LoadTextures(const char* fileSource)
 
         Load(id, source, width, height, opacity);
     }
+    return true;
 }
 
 void TextureManager::Draw(const std::string& id, int x, int y, SDL_RendererFlip flip)

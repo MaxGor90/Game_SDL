@@ -1,8 +1,9 @@
-#ifndef ANIMATION_H
-#define ANIMATION_H
+#ifndef H_ANIMATION
+#define H_ANIMATION
 
 #include <string>
 #include "SDL.h"
+#include "AnimationSequence.h"
 
 
 class Animation
@@ -15,7 +16,7 @@ public:
     bool UpdateSingle(bool repeatLastFrame = false);
 
     void Draw(float x, float y);
-    void SetParams(const std::string& textureID, int spriteRow, int frameCount, int frameTime, SDL_RendererFlip flip = SDL_FLIP_NONE, int startFrame = 0);
+    void SetParams(const std::string& textureID, std::shared_ptr<AnimationSequence> animSequence, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
     void SetAnimIsOver() 
     {
@@ -27,13 +28,14 @@ public:
 
 private:
 
-    int m_SpriteRow, m_FrameTime, m_FrameCount, m_StartFrame, m_SpriteFrame;
+    std::shared_ptr<AnimationSequence> m_AnimSequence {nullptr};
     std::string m_TextureID;
     SDL_RendererFlip m_Flip;
 
+    int m_SpriteFrame;
     int m_FrameShift {0};
     bool m_IsOver {true};               //  Last animation sequence is over and new hasn't started
     bool m_IsRepeating {false};         //  Repeating last frame of animation
 };
 
-#endif /* ANIMATION_H */
+#endif /* H_ANIMATION */

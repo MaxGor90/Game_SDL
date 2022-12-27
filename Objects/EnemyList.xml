@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enemylist>
+ <map name="level1" path="../Maps/level1.tmx">
+  <!--If Flip is needed add flip="hor" or flip="vert"-->
+  <enemy type="skeleton_melee" textureID="Skeleton" spawnX="500" spawnY="480"/>
+  <enemy type="skeleton_melee" textureID="Skeleton" spawnX="1505" spawnY="280"/>
+ </map>
+</enemylist>

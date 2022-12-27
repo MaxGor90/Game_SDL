@@ -13,11 +13,7 @@ class Collision
 {
     static std::shared_ptr<Collision> s_CollisionInstance;
 
-
-    std::vector<std::shared_ptr<TileLayer>> m_CollisionLayers;
     std::vector<std::shared_ptr<TileMap>> m_CollisionMaps;
-
-
 
 public:
 

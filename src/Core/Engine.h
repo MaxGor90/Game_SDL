@@ -4,8 +4,10 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "GameMap.h"
+#include "Character.h"
+#include "Enemy.h"
 #include <memory>
-
+#include <vector>
 
 
 
@@ -15,6 +17,10 @@ class Engine
     SDL_Renderer* m_Renderer {nullptr};
 
     std::shared_ptr<GameMap> m_LevelMap;
+
+    std::vector<std::shared_ptr<Character>> m_Enemies;
+    std::shared_ptr<EnemySpawner> m_EnemySpawner;
+    friend class EnemySpawner;
 
     static std::shared_ptr<Engine> s_EngineInstance;
     bool m_isRunning;

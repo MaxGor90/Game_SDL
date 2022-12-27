@@ -7,15 +7,12 @@
 #include "MapParser.h"
 #include "Camera.h"
 #include "Global.h"
-#include "Enemy.h"
-
-
+#include "Skeleton.h"
 
 
 
 std::shared_ptr<Engine> Engine::s_EngineInstance {nullptr};
 std::unique_ptr<Knight> Player {nullptr};
-std::unique_ptr<Enemy> Skeleton {nullptr};
 
 
 Engine::Engine()
@@ -60,13 +57,13 @@ bool Engine::Init()
         std::cout << "Failed to load the map." << std::endl;
     }
 
-    m_LevelMap = MapParser::GetInstance()->GetMap("Level1");
+    m_LevelMap = MapParser::GetInstance()->GetMap("level1");
 
     TextureManager::getInstance()->LoadTextures("../assets/Textures.xml");
 
-    // TextureManager::getInstance()->Load("Knight", "../assets/Knight/Knight.png",  200, 106);
-
-    Player = std::make_unique<Knight>( std::make_shared<ObjParams>( "Knight", 100, 100) );
+    Player = std::make_unique<Knight>( std::make_shared<ObjParams>( "Knight", 100, 480) );
+    m_EnemySpawner = EnemySpawner::getInstance();
+    m_EnemySpawner->SpawnEnemies("../Objects/EnemyList.xml", "level1");
 
     Camera::getInstance()->SetTarget(Player->GetPosition());
     
@@ -88,6 +85,8 @@ void Engine::Update()
     float dt {Timer::getInstance()->GetDeltaTime()};
     m_LevelMap->Update();
     Player->Update(dt);
+    for (auto enemy : m_Enemies)
+        enemy->Update(dt);
     m_LevelMap->UpdateFront();
     Camera::getInstance()->Update(dt);
 }
@@ -100,6 +99,8 @@ void Engine::Render()
     m_LevelMap->Render();
 
     Player->Draw();
+    for (auto enemy : m_Enemies)
+        enemy->Draw();
 
     m_LevelMap->RenderFront();
 

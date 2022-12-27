@@ -8,17 +8,10 @@ std::shared_ptr<Collision> Collision::s_CollisionInstance {nullptr};
 
 Collision::Collision()
 {
-    for (std::size_t i {0}; i < Engine::getInstance()->getMap()->GetMapLayers().size(); ++i)
+    for (auto layer : Engine::getInstance()->getMap()->GetMapCollisionLayers())
     {
-        if (Engine::getInstance()->getMap()->GetMapLayers().at(i)->LayerType == Layer::TILE)
-        {
-            std::shared_ptr<TileLayer> layer = std::dynamic_pointer_cast<TileLayer>(Engine::getInstance()->getMap()->GetMapLayers().at(i));
-            if (layer->GetCollision())
-            {
-                m_CollisionLayers.push_back(layer);
-                m_CollisionMaps.push_back(std::make_shared<TileMap>(layer->GetTileMap()));
-            }
-        }
+        if (layer->LayerType == Layer::TILE)
+            m_CollisionMaps.push_back(std::make_shared<TileMap>(std::dynamic_pointer_cast<TileLayer>(layer)->GetTileMap()));
     }
 }
 
