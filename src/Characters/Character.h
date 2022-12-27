@@ -56,6 +56,10 @@ public:
     virtual void SetParams(std::shared_ptr<AnimationSequence>, SDL_RendererFlip flip = SDL_FLIP_NONE);
     virtual void CollisionBoxRecalc();
     virtual void CheckPosition();
+    virtual void CollisionBoxAtkRecalc();
+    virtual void PositionRecalc();
+    virtual void CheckDirectionSetParams(std::shared_ptr<AnimationSequence> animSeq);
+    virtual bool CheckCollisions();
 
 protected:
 
@@ -84,5 +88,6 @@ protected:
     friend class AnimationParser;
 
 };
+
 
 #endif /* H_CHARACTER */

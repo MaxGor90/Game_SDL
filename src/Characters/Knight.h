@@ -14,8 +14,7 @@ class Knight : public Character
 public:
     Knight(std::shared_ptr<ObjParams> params);
     virtual ~Knight();
-    
-    
+
     virtual void Idle(float dt);
     virtual void Run(float dt);
     virtual void Roll(float dt);
@@ -27,11 +26,6 @@ public:
     virtual void Draw();
     virtual void Update(float dt);
     virtual void Clean();
-
-    void CheckDirectionSetParams(std::shared_ptr<AnimationSequence> animSeq);
-    bool CheckCollisions();
-    void PositionRecalc();
-    void CollisionBoxAtkRecalc();
 
 protected:
 

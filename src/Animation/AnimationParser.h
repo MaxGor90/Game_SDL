@@ -7,7 +7,7 @@
 
 
 
-
+// Class-parser of XML file with animation parameters 
 class AnimationParser
 {   
 public:

@@ -6,16 +6,16 @@
  <tileset firstgid="1216" name="Mossy - TileSet _ 640" tilewidth="32" tileheight="32" tilecount="400" columns="20">
   <image source="../Background/Mossy - TileSet _ 640.png" width="640" height="657"/>
  </tileset>
- <imagelayer id="4" name="Back_0" visible="0" offsetx="74" offsety="-152" repeatx="1">
+ <imagelayer id="4" name="Back_0" offsetx="-14" offsety="-122" repeatx="1">
   <image source="../Background/back_0.png" width="1152" height="720"/>
  </imagelayer>
- <imagelayer id="6" name="Back_1" visible="0" offsetx="30" offsety="-124" repeatx="1">
+ <imagelayer id="6" name="Back_1" offsetx="10" offsety="-94" repeatx="1">
   <image source="../Background/back_1.png" width="1152" height="720"/>
   <properties>
    <property name="speed" type="float" value="0.2"/>
   </properties>
  </imagelayer>
- <imagelayer id="7" name="Back_2" visible="0" offsetx="8" offsety="-78" repeatx="1">
+ <imagelayer id="7" name="Back_2" offsetx="8" offsety="-78" repeatx="1">
   <image source="../Background/back_2.png" width="1152" height="720"/>
   <properties>
    <property name="speed" type="float" value="0.6"/>

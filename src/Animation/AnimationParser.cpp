@@ -1,6 +1,15 @@
 #include "AnimationParser.h"
 
 
+/*   Method parses one animation sequence from XML with animation parameters: 
+    name - name of the animation sequence
+    row - row in the spritesheet
+    frameCount - number of frames in animation
+    startFrame - starting position in a row in the spritesheet
+    frameTime - time per animation frame (1 / speed)
+    Col<*> - collision box parameters inside the frame
+    atkCol<*> - attack collision box parameters inside the frame (collision box for hit detection)
+*/
 
 std::shared_ptr<AnimationSequence> AnimationParser::ParseAnimationSequence(tinyxml2::XMLElement* el)
 {
@@ -18,6 +27,7 @@ std::shared_ptr<AnimationSequence> AnimationParser::ParseAnimationSequence(tinyx
     startFrame = el->IntAttribute("start");
     frameTime = el->IntAttribute("time");
     
+    // Collisiom box parameters 
     colX = el->FindAttribute("x")? el->IntAttribute("x") : 0;
     colY = el->FindAttribute("y")? el->IntAttribute("y") : 0;
     colW = el->FindAttribute("width")? el->IntAttribute("width") : 0;
@@ -25,6 +35,7 @@ std::shared_ptr<AnimationSequence> AnimationParser::ParseAnimationSequence(tinyx
     if (!(colX==0 && colY==0 && colW==0 && colH==0))
         collisionBox = std::make_shared<SDL_Rect>(SDL_Rect{colX, colY, colW, colH});
     
+    // Attack collsiion box parameters
     atkColX = el->FindAttribute("atkColX")? el->IntAttribute("atkColX") : 0;
     atkColY = el->FindAttribute("atkColY")? el->IntAttribute("atkColY") : 0;
     atkColW = el->FindAttribute("atkColW")? el->IntAttribute("atkColW") : 0;
@@ -41,10 +52,9 @@ std::shared_ptr<AnimationSequence> AnimationParser::ParseAnimationSequence(tinyx
         return std::make_shared<AnimationSequence>(AnimationSequence(type, name, row, frameCount, startFrame, frameTime, collisionBox));
     case animType::attack:
     {
-        std::shared_ptr<AttackAnimationSequence> newSequence = std::make_shared<AttackAnimationSequence>(
-                                                                    AttackAnimationSequence(type, name, row, frameCount, startFrame, frameTime, 
-                                                                                                collisionBox, attackCollisionBox) );
-        return std::dynamic_pointer_cast<AnimationSequence>(newSequence);
+        // Making derived object and returning base class pointer
+        return std::make_shared<AttackAnimationSequence>(AttackAnimationSequence( type, name, row, frameCount, startFrame, frameTime, 
+                                                                            collisionBox, attackCollisionBox) );
     }
     default:
         return nullptr;

@@ -9,7 +9,7 @@ std::shared_ptr<MapParser> MapParser::s_MapParserInstance {nullptr};
 
 bool MapParser::Load()
 {
-    return ( Parse("Level1", "../assets/Maps/map.tmx") );
+    return ( Parse("level1", "../assets/Maps/level1.tmx") );
 }
 
 bool MapParser::Parse(const std::string& id, const char* sourceFile)

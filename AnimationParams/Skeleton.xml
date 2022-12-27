@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
- <collision x="40" y="14" width="33" height="66"/>
  <animations>
-  <animation name="idle" row="4" count="5" start="0" time="80"/>
-  <animation name="run" row="3" count="12" start="0" time="80"/>
-  <animation name="attack1" row="1" count="7" start="0" time="60" 
+  <!--
+    name - name of the animation sequence
+    row - row in the spritesheet
+    count - number of frames in an animation
+    start - starting position in a row in the spritesheet
+    time - time per animation frame (1 / speed)
+    x, y, width, height - collision box parameters inside the frame
+    atkCol* - attack collision box parameters inside the frame (collision box for hit detection)
+-->
+
+  <animation name="idle" row="4" count="4" start="0" time="160" x="40" y="14" width="33" height="66"/>
+  <animation name="run" row="3" count="12" start="0" time="80" x="40" y="14" width="33" height="66"/>
+  <animation name="attack1" row="1" count="7" start="0" time="60" x="40" y="14" width="33" height="66"
              atkColX="27" atkColY="0" atkColW="101" atkColH="56"/>
-  <animation name="attack2" row="1" count="6" start="7" time="60" 
+  <animation name="attack2" row="1" count="6" start="7" time="60" x="40" y="14" width="33" height="66" 
              atkColX="4" atkColY="16" atkColW="124" atkColH="48"/>
  </animations>
 </root>

@@ -5,6 +5,16 @@
 #include <memory>
 #include "SDL.h"
 
+
+enum animType
+{
+    // Animation type not requiring additional collision box
+    basic = 0,
+    // Animation type requiring additional collision box
+    attack
+};
+
+// Animation parameters for basic animation type
 struct AnimationParams
 {
     std::string name;
@@ -15,11 +25,6 @@ struct AnimationParams
     std::shared_ptr<SDL_Rect> collisionBox;
 };
 
-enum animType
-{
-    basic = 0,
-    attack
-};
 
 class AnimationSequence
 {
