@@ -1,4 +1,4 @@
 # Game_SDL
  2D platformer SDL2 engine
 
- Started by YouTube tutorial (Madsycode). Collision handling and onwards going by myself.
+ Started with YouTube tutorial (Madsycode). After learning some SDL and gamedev basics continue developing by myself.
