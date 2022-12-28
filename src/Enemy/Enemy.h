@@ -7,13 +7,15 @@
 
 enum enemyType
 {
-    skeleton_melee = 0
+    skeleton_melee = 0,
+    skeleton_test
 };
 
 
 // Map with enemy types and their names for parsing EnemyList.xml
 static const std::map<std::string, enemyType> EnemyTypeMap{
-    {"skeleton_melee", enemyType::skeleton_melee}
+    {"skeleton_melee", enemyType::skeleton_melee},
+    {"skeleton_test", enemyType::skeleton_test}
 };
 /*-------------------------------------------------------------*/
 

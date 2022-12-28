@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "Skeleton.h"
+#include "SkeletonTest.h"
 #include "Engine.h"
 #include "tinyxml2.h"
 #include "SDL.h"
@@ -99,7 +100,7 @@ void EnemySpawner::SpawnEnemies(const std::string& enemyList, const std::string&
 
     if (doc.Error())
     {
-        SDL_Log("%s: Failed to load the document %s: %s", SDL_FUNCTION, enemyList, doc.ErrorStr());
+        SDL_Log("%s: Failed to load the document %s: %s", SDL_FUNCTION, enemyList.c_str(), doc.ErrorStr());
         return;
     }
 
@@ -142,6 +143,9 @@ void EnemySpawner::SpawnEnemies(const std::string& enemyList, const std::string&
                 {
                 case skeleton_melee:
                     m_Factories[type] = std::shared_ptr<SkeletonFactory>(new SkeletonFactory());
+                    break;
+                case skeleton_test:
+                    m_Factories[type] = std::shared_ptr<SkeletonTestFactory>(new SkeletonTestFactory());
                     break;
                 default:
                     break; 
