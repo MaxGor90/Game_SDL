@@ -4,5 +4,6 @@
   <!--If Flip is needed add flip="hor" or flip="vert"-->
   <enemy type="skeleton_melee" textureID="Skeleton" spawnX="500" spawnY="480"/>
   <enemy type="skeleton_melee" textureID="Skeleton" spawnX="1505" spawnY="280"/>
+  <enemy type="skeleton_test" textureID="Skeleton" spawnX="1905" spawnY="280"/>
  </map>
 </enemylist>
