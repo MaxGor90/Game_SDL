@@ -5,29 +5,48 @@ Skeleton::Skeleton(std::shared_ptr<ObjParams> params) :
     Enemy::Enemy(params)
 {
     m_Direction = Direction::backward;
-}
-
-void Skeleton::Fall(float dt) 
-{
-    CheckDirectionSetParams(m_AnimationSequences.at("idle"));           // No Fall animation for Skeleton yet
-
-    m_RigidBody->UnsetForce();
-
-    m_RigidBody->Update(dt);
-
-    CheckCollisions();
-
-    if (m_Condition == IsIdle)
-    {
-        Idle(dt);
-        return;
-    }
-
-    m_Animation->UpdateCycle();
+    m_RunSpeedInFrames = 2.0f * 60.0f;
 }
 
 void Skeleton::Attack(float dt) 
 {
+    m_RigidBody->StopX();
+    m_RigidBody->UnsetForce();
+
+    switch (m_ComboState)
+    {
+    case HIT_1:
+        CheckDirectionSetParams(m_AnimationSequences.at("attack1"));          
+        if (m_Animation->UpdateSingle(true))        //  Attack ends and pending time for next attack begins
+            m_AttackEnds = SDL_GetTicks64();
+        if (m_Animation->IsRepeating())
+        {
+            isVulnerable = true;
+            // if (hurt) idle;
+            // if (player is out of sight) idle;
+
+            if ((int)SDL_GetTicks64() - m_AttackEnds >= m_TimeBetweenAttacks)
+            {
+                m_ComboState = HIT_2;
+                m_Animation->SetAnimIsOver();
+                return;
+            }
+        }
+        break;
+    case HIT_2:
+        CheckDirectionSetParams(m_AnimationSequences.at("attack2"));        
+        if (m_Animation->UpdateSingle(false))        //  Attack ends and pending time for next attack begins
+            m_Condition = Falling;
+        break;
+    case HIT_3:
+    case NO:
+    default:
+        m_Condition = Falling;
+        break;
+    }
+
+    CollisionBoxAtkRecalc();
 }
+
 
 

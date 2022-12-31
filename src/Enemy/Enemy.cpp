@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Skeleton.h"
 #include "Engine.h"
+#include "Input.h"
 #include "tinyxml2.h"
 #include "SDL.h"
 
@@ -72,6 +73,21 @@ void Enemy::Idle(float dt)
 
     m_ComboState = NO;
 
+    if (Input::getInstance()->isKeyDown(SDL_SCANCODE_Q))
+    {
+        m_Condition = Attacking;
+        m_ComboState = HIT_1;
+        Attack(dt);
+        return;
+    }
+    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_J) ||
+         Input::getInstance()->isKeyDown(SDL_SCANCODE_L) )
+    {
+        m_Condition = Running;
+        Run(dt);
+        return;
+    }
+
     CheckCollisions();
     m_Animation->UpdateCycle();
 }
@@ -79,17 +95,72 @@ void Enemy::Idle(float dt)
 void Enemy::Run(float dt) 
 {
     m_RigidBody->UnsetForce();
-    CheckDirectionSetParams(m_AnimationSequences.at("run"));                         // Run
+    if (Input::getInstance()->isKeyDown(SDL_SCANCODE_J))
+        SetDirection(Direction::backward);
+    else if (Input::getInstance()->isKeyDown(SDL_SCANCODE_L))
+        SetDirection(Direction::forward);
+    else
+    {
+        m_Condition = IsIdle;
+        return;
+    } 
+    CheckDirectionSetParams(m_AnimationSequences.at("run")); 
 
+    switch (m_Direction)
+    {
+    case forward:
+        m_RigidBody->ApplyForceX(m_RunSpeedInFrames / TARGET_FPS * FORWARD);
+        break;
+    case backward:
+        m_RigidBody->ApplyForceX(m_RunSpeedInFrames / TARGET_FPS * BACKWARD);
+        break;
+    default:
+        break;
+    }
+
+    if (!m_Collision->GetInstance()->CollisionWithMapY(&m_Transform, m_CollisionBox))
+    {
+        m_Condition = Falling;
+        Fall(dt);
+        return;
+    }
+
+    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_Q) )
+    {
+        m_Condition = Attacking;
+        m_ComboState = HIT_1;
+        Attack(dt);
+        return;
+    }
     m_RigidBody->Update(dt);
 
     CheckCollisions();
 
     m_Animation->UpdateCycle();
+}
 
+void Enemy::Fall(float dt)
+{
+    CheckDirectionSetParams(m_AnimationSequences.at("fall"));        
+
+    m_RigidBody->UnsetForce();
+
+    m_RigidBody->Update(dt);
+
+    CheckCollisions();
+
+    if (m_Condition == IsIdle)
+    {
+        Idle(dt);
+        return;
+    }
+
+    m_Animation->UpdateCycle();
 }
 
 
+
+/*--------------------------------------------------------------------------------------------*/
 std::shared_ptr<EnemySpawner> EnemySpawner::EnemySpawnerInstance {nullptr};
 
 void EnemySpawner::SpawnEnemies(const std::string& enemyList, const std::string& levelName) 
@@ -99,7 +170,7 @@ void EnemySpawner::SpawnEnemies(const std::string& enemyList, const std::string&
 
     if (doc.Error())
     {
-        SDL_Log("%s: Failed to load the document %s: %s", SDL_FUNCTION, enemyList, doc.ErrorStr());
+        SDL_Log("%s: Failed to load the document %s: %s", SDL_FUNCTION, enemyList.c_str(), doc.ErrorStr());
         return;
     }
 

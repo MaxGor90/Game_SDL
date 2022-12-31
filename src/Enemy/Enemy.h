@@ -30,12 +30,22 @@ public:
 
     virtual void Idle(float dt);
     virtual void Run(float dt);
-    virtual void Fall(float dt)     {dt = dt;};
+    virtual void Fall(float dt);
     virtual void Roll(float dt)     {dt = dt;};
     virtual void Attack(float dt)   {dt = dt;};
     virtual void Block()            {};
     virtual void Jump(float dt)     {dt = dt;};
+
+protected:
+    int m_AttackEnds{0};                //  Time when the last attack ended
+    int m_TimeBetweenAttacks{800};      //  Time between attacks in combo
+    bool isVulnerable {true};           //  Enemy can take damage 
+    float m_RunSpeedInFrames {6.0f * 60.0f};    //  Speed in frames so divided by target frame rate speed will be constant on different FRs
 };
+
+
+/*--------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------*/
 
 // Enemy creator interface
 class EnemyFactory

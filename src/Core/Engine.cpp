@@ -63,7 +63,13 @@ bool Engine::Init()
 
     Player = std::make_unique<Knight>( std::make_shared<ObjParams>( "Knight", 100, 480) );
     m_EnemySpawner = EnemySpawner::getInstance();
-    m_EnemySpawner->SpawnEnemies("../Objects/EnemyList.xml", "level1");
+    
+    //  Spawn enemies from list keeping in mind possible exceptions
+    try {
+        m_EnemySpawner->SpawnEnemies("../Objects/EnemyList.xml", "level1");
+    } catch(const std::string& error) {
+        return m_isRunning = false;
+    }
 
     Camera::getInstance()->SetTarget(Player->GetPosition());
     

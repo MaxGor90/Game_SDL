@@ -11,7 +11,6 @@ public:
     virtual ~Skeleton()
     {}
 
-    virtual void Fall(float dt);
     virtual void Attack(float dt);
 };
 

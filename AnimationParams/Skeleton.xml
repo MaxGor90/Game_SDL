@@ -17,6 +17,7 @@
              atkColX="27" atkColY="0" atkColW="101" atkColH="56"/>
   <animation name="attack2" row="1" count="6" start="7" time="60" x="40" y="14" width="33" height="66" 
              atkColX="4" atkColY="16" atkColW="124" atkColH="48"/>
+  <animation name="fall" row="1" count="1" start="0" time="160" x="40" y="14" width="33" height="66"/>
  </animations>
 </root>
  

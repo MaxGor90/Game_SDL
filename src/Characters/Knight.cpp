@@ -72,22 +72,14 @@ void Knight::Idle(float dt)
 
     m_ComboState = NO;
 
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_A) )
+    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_A) ||
+         Input::getInstance()->isKeyDown(SDL_SCANCODE_D) )
     {
-        SetDirection(backward);
         m_Condition = Running;
         Run(dt);
         return;
     }
     
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_D) )
-    {
-        SetDirection(forward);
-        m_Condition = Running;
-        Run(dt);
-        return;
-    }
-
     if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_LSHIFT) )
     {
         m_Condition = Rolling;
@@ -388,12 +380,12 @@ void Knight::Attack(float dt)
         CheckDirectionSetParams(m_AnimationSequences.at("attack3"));          //  Attack_3
         if (m_Animation->UpdateSingle())
             m_Condition = Falling;
-    break;
+        break;
     
     case NO:
     default:
         m_Condition = Falling;
-    break;
+        break;
     }
 
     CollisionBoxAtkRecalc();
