@@ -17,6 +17,7 @@ static const std::map<std::string, enemyType> EnemyTypeMap{
 };
 /*-------------------------------------------------------------*/
 
+class AI;
 
 class Enemy : public Character
 {
@@ -40,7 +41,17 @@ protected:
     int m_AttackEnds{0};                //  Time when the last attack ended
     int m_TimeBetweenAttacks{800};      //  Time between attacks in combo
     bool isVulnerable {true};           //  Enemy can take damage 
-    float m_RunSpeedInFrames {6.0f * 60.0f};    //  Speed in frames so divided by target frame rate speed will be constant on different FRs
+    
+    float m_RunSpeedInFrames;           //  Movement speed for aggroed state
+    float m_WalkSpeedInFrames;          //  Movement speed for patrolling (not aggroed) state
+
+    float spawnX, spawnY;               //  Spawn point - for patrolling purpose
+
+    bool isAggroed {false};             //  Aggroed by player - for movement speed 
+    
+    friend class AI;
+
+    std::shared_ptr<AI> m_AI {nullptr};
 };
 
 

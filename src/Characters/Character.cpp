@@ -21,6 +21,17 @@ catch(const std::string& error) {
     throw error;
 };
 
+void Character::ChangeDirection() 
+{
+    if (m_Direction == backward)
+    {
+        SetDirection(forward);
+        return;
+    }
+
+    SetDirection(backward);
+}
+
 void Character::LoadAnimations(const std::string& fileSource)
 {
     tinyxml2::XMLDocument doc;

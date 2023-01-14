@@ -1,4 +1,6 @@
 #include "Skeleton.h"
+#include "Timer.h"
+#include "AI.h"
 
 
 Skeleton::Skeleton(std::shared_ptr<ObjParams> params) :
@@ -6,6 +8,9 @@ Skeleton::Skeleton(std::shared_ptr<ObjParams> params) :
 {
     m_Direction = Direction::backward;
     m_RunSpeedInFrames = 2.0f * 60.0f;
+    m_WalkSpeedInFrames = m_RunSpeedInFrames / 2;
+
+    m_AI = std::make_shared<AI>( AI(BehaviorType::aggressive) );
 }
 
 void Skeleton::Attack(float dt) 
@@ -18,14 +23,14 @@ void Skeleton::Attack(float dt)
     case HIT_1:
         CheckDirectionSetParams(m_AnimationSequences.at("attack1"));          
         if (m_Animation->UpdateSingle(true))        //  Attack ends and pending time for next attack begins
-            m_AttackEnds = SDL_GetTicks64();
+            m_AttackEnds = Timer::getInstance()->GetLastTime();
         if (m_Animation->IsRepeating())
         {
             isVulnerable = true;
             // if (hurt) idle;
             // if (player is out of sight) idle;
 
-            if ((int)SDL_GetTicks64() - m_AttackEnds >= m_TimeBetweenAttacks)
+            if (Timer::getInstance()->GetLastTime() - m_AttackEnds >= m_TimeBetweenAttacks)
             {
                 m_ComboState = HIT_2;
                 m_Animation->SetAnimIsOver();

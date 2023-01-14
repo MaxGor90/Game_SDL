@@ -22,8 +22,8 @@ public:
     {}
 
     enum Direction {
-        forward = 0,
-        backward
+        backward = -1,
+        forward = 1
     };
     
     enum Condition {
@@ -49,6 +49,7 @@ public:
     virtual void Clean() = 0;
 
     void SetDirection(Direction dir) { m_Direction = dir; }
+    void ChangeDirection();
 
     std::string GetAnimParamsSource();
     void LoadAnimations(const std::string& fileSource);

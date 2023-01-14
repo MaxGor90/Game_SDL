@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "tinyxml2.h"
 #include "SDL.h"
+#include "AI.h"
 
 
 
@@ -15,6 +16,9 @@ Enemy::Enemy(std::shared_ptr<ObjParams> params) :
     m_RigidBody = std::make_unique<RigidBody>();
     
     m_Collision = Collision::GetInstance();
+
+    spawnX = params->X;
+    spawnY = params->Y;
 }
 
 
@@ -31,6 +35,8 @@ void Enemy::Draw()
 
 void Enemy::Update(float dt)
 {
+    m_AI->Update(this);
+
     switch (m_Condition)
     {
     case Attacking:
@@ -95,28 +101,10 @@ void Enemy::Idle(float dt)
 void Enemy::Run(float dt) 
 {
     m_RigidBody->UnsetForce();
-    if (Input::getInstance()->isKeyDown(SDL_SCANCODE_J))
-        SetDirection(Direction::backward);
-    else if (Input::getInstance()->isKeyDown(SDL_SCANCODE_L))
-        SetDirection(Direction::forward);
-    else
-    {
-        m_Condition = IsIdle;
-        return;
-    } 
     CheckDirectionSetParams(m_AnimationSequences.at("run")); 
 
-    switch (m_Direction)
-    {
-    case forward:
-        m_RigidBody->ApplyForceX(m_RunSpeedInFrames / TARGET_FPS * FORWARD);
-        break;
-    case backward:
-        m_RigidBody->ApplyForceX(m_RunSpeedInFrames / TARGET_FPS * BACKWARD);
-        break;
-    default:
-        break;
-    }
+    // Running or walking depending on aggroed state, direction of force depends on m_Direction
+    m_RigidBody->ApplyForceX((isAggroed? m_RunSpeedInFrames : m_WalkSpeedInFrames) / TARGET_FPS * (int)m_Direction);
 
     if (!m_Collision->GetInstance()->CollisionWithMapY(&m_Transform, m_CollisionBox))
     {

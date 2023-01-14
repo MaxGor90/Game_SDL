@@ -313,10 +313,10 @@ void Knight::Attack(float dt)
     case HIT_1:
         CheckDirectionSetParams(m_AnimationSequences.at("attack1"));          //  Attack_1
         if (m_Animation->UpdateSingle(true))        //  Attack ends and pending time for next attack begins
-            m_AttackEnds = SDL_GetTicks64();
+            m_AttackEnds = Timer::getInstance()->GetLastTime();
         if (m_Animation->IsRepeating()) 
         {
-            if ((int)SDL_GetTicks64() - m_AttackEnds <= (m_IsInAir? m_TimeBetweenAttacksInAir : m_TimeBetweenAttacks))
+            if (Timer::getInstance()->GetLastTime() - m_AttackEnds <= (m_IsInAir? m_TimeBetweenAttacksInAir : m_TimeBetweenAttacks))
             {
                 if (Input::getInstance()->isMouseButtonDown(MOUSE_LB))
                 {
@@ -347,10 +347,10 @@ void Knight::Attack(float dt)
     case HIT_2:
         CheckDirectionSetParams(m_AnimationSequences.at("attack2"));          //  Attack_2
         if (m_Animation->UpdateSingle(true))        //  Attack ends and pending time for next attack begins
-            m_AttackEnds = SDL_GetTicks64();
+            m_AttackEnds = Timer::getInstance()->GetLastTime();
         if (m_Animation->IsRepeating()) 
         {
-            if ((int)SDL_GetTicks64() - m_AttackEnds <= (m_IsInAir? m_TimeBetweenAttacksInAir : m_TimeBetweenAttacks))
+            if (Timer::getInstance()->GetLastTime() - m_AttackEnds <= (m_IsInAir? m_TimeBetweenAttacksInAir : m_TimeBetweenAttacks))
             {
                 if (Input::getInstance()->isMouseButtonDown(MOUSE_LB))
                 {
