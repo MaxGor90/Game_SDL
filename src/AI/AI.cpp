@@ -1,20 +1,28 @@
 #include "AI.h"
 #include "Character.h"
 #include "Timer.h"
+#include "Engine.h"
 
 
+
+AI::AI(BehaviorType behaveType) : Behavior { behaveType }
+{
+    player = Engine::getInstance()->m_Player;
+}
 
 void AI::Update(Enemy* enemy) 
 {
+    ScanAround(enemy);
     if (!enemy->isAggroed)
     {
         Patrole(enemy);
-    }
+    } else
+        SDL_Log("%s: Aggroed!", SDL_FUNCTION);
 }
 
 void AI::Patrole(Enemy* enemy) 
 {
-    typedef Enemy::Condition Condition;
+    using Condition = Enemy::Condition;
     
     if (enemy->m_Condition == Condition::IsIdle)
     {
@@ -30,6 +38,34 @@ void AI::Patrole(Enemy* enemy)
         enemy->GetPosition()->X > enemy->spawnX + patrollingRange)
     {
         enemy->m_Condition = Condition::IsIdle;
+    }
+}
+
+void AI::ScanAround(Enemy* enemy) 
+{
+    using Direction = Enemy::Direction;
+    float enemyPos {enemy->GetPosition()->X};
+
+    switch (enemy->m_Direction)
+    {
+    case Direction::backward:
+    {
+        if (enemyPos - player->GetPosition()->X <= sightRange &&
+            player->GetPosition()->X - enemyPos <= hearRange)
+            enemy->SetAggroed();
+        else enemy->SetNotAggroed();
+        return;
+    }
+    case Direction::forward:
+    {
+        if (enemyPos - player->GetPosition()->X <= hearRange &&
+            player->GetPosition()->X - enemyPos <= sightRange)
+            enemy->SetAggroed();
+        else enemy->SetNotAggroed();
+        return;
+    }
+    default:
+        return;
     }
 }
 
@@ -56,3 +92,4 @@ bool AI::TimePassed(int time, bool random, float minMultiplier, float maxMultipl
 
     return false;
 }
+

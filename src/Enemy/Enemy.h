@@ -37,6 +37,10 @@ public:
     virtual void Block()            {};
     virtual void Jump(float dt)     {dt = dt;};
 
+    virtual void SetAggroed()   { isAggroed = true; }
+    virtual void SetNotAggroed()   { isAggroed = false; }
+
+
 protected:
     int m_AttackEnds{0};                //  Time when the last attack ended
     int m_TimeBetweenAttacks{800};      //  Time between attacks in combo

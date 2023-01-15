@@ -18,6 +18,7 @@ class Engine
 
     std::shared_ptr<GameMap> m_LevelMap;
     std::shared_ptr<Character> m_Player {nullptr};
+    friend class AI;
 
     std::vector<std::shared_ptr<Character>> m_Enemies;
     std::shared_ptr<EnemySpawner> m_EnemySpawner;
