@@ -62,9 +62,10 @@ public:
     virtual void CheckDirectionSetParams(std::shared_ptr<AnimationSequence> animSeq);
     virtual bool CheckCollisions();
 
-protected:
+    virtual std::shared_ptr<SDL_Rect> GetCollisionBox() { return m_CollisionBox; }
+    
 
-    std::string m_Name;
+protected:
 
     bool m_IsInAir {true};
 

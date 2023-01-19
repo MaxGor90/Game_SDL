@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Timer.h"
 #include "Engine.h"
+#include "Collision.h"
 
 
 
@@ -12,12 +13,27 @@ AI::AI(BehaviorType behaveType) : Behavior { behaveType }
 
 void AI::Update(Enemy* enemy) 
 {
-    ScanAround(enemy);
-    if (!enemy->isAggroed)
+    if (enemy->m_Condition == Character::Condition::Attacking || 
+        enemy->m_Condition == Character::Condition::Falling)
     {
-        Patrole(enemy);
-    } else
+        return;
+    }
+    ScanAround(enemy);
+    if (enemy->isAggroed)
+    {
         SDL_Log("%s: Aggroed!", SDL_FUNCTION);
+        if (playerIsInAttackRange(enemy))
+        {
+            SDL_Log("%s: Attacking!", SDL_FUNCTION);
+            Attack(enemy);
+            return;
+        }
+
+        Charge(enemy);
+        return;
+    }
+    
+    Patrole(enemy);
 }
 
 void AI::Patrole(Enemy* enemy) 
@@ -45,28 +61,47 @@ void AI::ScanAround(Enemy* enemy)
 {
     using Direction = Enemy::Direction;
     float enemyPos {enemy->GetPosition()->X};
+    float playerPos {player->GetPosition()->X};
 
+    if (!enemy->isAggroed)
+    {
+        if (playerIsInSight(enemy))
+            enemy->SetAggroed();
+        return;
+    }
+
+    //  Aggroed
     switch (enemy->m_Direction)
     {
     case Direction::backward:
-    {
-        if (enemyPos - player->GetPosition()->X <= sightRange &&
-            player->GetPosition()->X - enemyPos <= hearRange)
-            enemy->SetAggroed();
-        else enemy->SetNotAggroed();
-        return;
-    }
+        if (playerPos > enemyPos)
+            enemy->ChangeDirection();
+        break;
     case Direction::forward:
+        if (enemyPos > playerPos)
+            enemy->ChangeDirection();
+        break;
+    }
+
+    if ( (playerPos > enemy->spawnX + chasingRange || playerPos < enemy->spawnX - chasingRange) &&
+         (!playerIsInSight(enemy)) )
     {
-        if (enemyPos - player->GetPosition()->X <= hearRange &&
-            player->GetPosition()->X - enemyPos <= sightRange)
-            enemy->SetAggroed();
-        else enemy->SetNotAggroed();
-        return;
+        enemy->SetNotAggroed();
+        enemy->spawnX = enemyPos;
     }
-    default:
-        return;
-    }
+}
+
+
+
+void AI::Charge(Enemy* enemy)
+{
+    enemy->m_Condition = Enemy::Condition::Running;
+}
+
+void AI::Attack(Enemy* enemy)
+{
+    enemy->m_Condition = Enemy::Condition::Attacking;
+    enemy->m_ComboState = Character::ComboState::HIT_1;
 }
 
 
@@ -91,5 +126,54 @@ bool AI::TimePassed(int time, bool random, float minMultiplier, float maxMultipl
     }
 
     return false;
+}
+
+bool AI::playerIsInSight(Enemy* enemy)
+{
+    using Direction = Enemy::Direction;
+    float enemyPos {enemy->GetPosition()->X};
+    float playerPos {player->GetPosition()->X};
+
+    switch (enemy->m_Direction)
+    {
+    case Direction::backward:
+    {
+        if (enemyPos - playerPos <= sightRange &&
+            enemyPos > playerPos)
+        {
+            return true;
+        }
+        if (playerPos - enemyPos <= hearRange && 
+            enemyPos < playerPos)
+        {
+            enemy->ChangeDirection();
+            return true;
+        }
+        return false;
+    }
+    case Direction::forward:
+    {
+        if (enemyPos - playerPos <= hearRange &&
+            enemyPos > playerPos)
+        {
+            enemy->ChangeDirection();
+            return true;
+        }
+        if (playerPos - enemyPos <= sightRange &&
+            enemyPos < playerPos)
+        {
+            return true;
+        }
+        return false;
+    }
+    default:
+        return false;
+    }
+}
+
+bool AI::playerIsInAttackRange(Enemy* enemy)
+{
+    enemy->CollisionBoxAtkRecalc();
+    return Collision::CheckCollision(enemy->m_CollisionBoxAtk, player->GetCollisionBox());
 }
 

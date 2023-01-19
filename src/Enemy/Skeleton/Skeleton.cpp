@@ -11,8 +11,9 @@ Skeleton::Skeleton(std::shared_ptr<ObjParams> params) :
     m_WalkSpeedInFrames = m_RunSpeedInFrames / 2;
 
     m_AI = std::make_shared<AI>( AI(BehaviorType::aggressive) );
-    m_AI->setHearRange(100);
-    m_AI->setSightRange(200);
+    m_AI->setHearRange(150);
+    m_AI->setSightRange(300);
+    m_AI->setChasingArea(1000);
 }
 
 void Skeleton::Attack(float dt) 
@@ -51,8 +52,6 @@ void Skeleton::Attack(float dt)
         m_Condition = Falling;
         break;
     }
-
-    CollisionBoxAtkRecalc();
 }
 
 

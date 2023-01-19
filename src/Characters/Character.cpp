@@ -83,7 +83,8 @@ void Character::SetParams(std::shared_ptr<AnimationSequence> animSequence, SDL_R
     if (animSequence->getCollisionBox() != nullptr)
         m_CollisionBoxInsideFrame = animSequence->getCollisionBox();
     
-    m_CollisionBoxAtkInsideFrame = animSequence->getAttackCollisionBox();
+    if (animSequence->getAttackCollisionBox() != nullptr)
+        m_CollisionBoxAtkInsideFrame = animSequence->getAttackCollisionBox();
     m_Width = TextureManager::getInstance()->GetTextureWidth(m_TextureID);
     m_Height = TextureManager::getInstance()->GetTextureHeight(m_TextureID);
 
@@ -137,11 +138,14 @@ void Character::CollisionBoxAtkRecalc()
         break;
     case NO:
     default:
-        return;
+        //  For enemy AI to check distance for attacking
+        animID = "attack1";     
+        break;
     }
     
-    int atkColBoxX = m_AnimationSequences.at(animID)->getAttackCollisionBox()->x;
-    int atkColBoxWidth = m_AnimationSequences.at(animID)->getAttackCollisionBox()->w;
+    m_CollisionBoxAtkInsideFrame = m_AnimationSequences.at(animID)->getAttackCollisionBox();
+    m_CollisionBoxAtk->h = m_CollisionBoxAtkInsideFrame->h;
+    m_CollisionBoxAtk->w = m_CollisionBoxAtkInsideFrame->w;
     
     switch (m_Direction)
     {
@@ -150,7 +154,7 @@ void Character::CollisionBoxAtkRecalc()
         m_CollisionBoxAtk->y = (int)m_Transform->m_Y + m_CollisionBoxAtkInsideFrame->y;         
         return;
     case backward:
-        m_CollisionBoxAtk->x = (int)m_Transform->m_X + m_Width - atkColBoxX - atkColBoxWidth;
+        m_CollisionBoxAtk->x = (int)m_Transform->m_X + m_Width - m_CollisionBoxAtkInsideFrame->x - m_CollisionBoxAtkInsideFrame->w;
         m_CollisionBoxAtk->y = (int)m_Transform->m_Y + m_CollisionBoxAtkInsideFrame->y;         
         return;
     }

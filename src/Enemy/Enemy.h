@@ -1,5 +1,5 @@
-#ifndef H_ENEMY
-#define H_ENEMY
+#ifndef ENEMY_H
+#define ENEMY_H
 
 #include "Character.h"
 #include <map>
@@ -90,4 +90,4 @@ public:
 
 };
 
-#endif /* H_ENEMY */
+#endif /* ENEMY_H */
