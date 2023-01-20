@@ -1,5 +1,5 @@
-#ifndef H_CHARACTER
-#define H_CHARACTER
+#ifndef CHARACTER_H
+#define CHARACTER_H
 
 #include <string>
 #include <memory>
@@ -92,4 +92,4 @@ protected:
 };
 
 
-#endif /* H_CHARACTER */
+#endif /* CHARACTER_H */

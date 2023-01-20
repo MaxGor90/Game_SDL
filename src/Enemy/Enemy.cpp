@@ -40,7 +40,7 @@ void Enemy::Update(float dt)
     switch (m_Condition)
     {
     case Attacking:
-        Attack(dt);
+        Attack();
         return;
     case Rolling:
         Roll(dt);
@@ -83,7 +83,7 @@ void Enemy::Idle(float dt)
     {
         m_Condition = Attacking;
         m_ComboState = HIT_1;
-        Attack(dt);
+        Attack();
         return;
     }
     if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_J) ||
@@ -117,7 +117,7 @@ void Enemy::Run(float dt)
     {
         m_Condition = Attacking;
         m_ComboState = HIT_1;
-        Attack(dt);
+        Attack();
         return;
     }
     m_RigidBody->Update(dt);

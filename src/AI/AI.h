@@ -19,9 +19,10 @@ class AI
     int hearRange;              // Range of aggro without clear sight ("by ear")
     int patrollingRange {150};  // Range of patrolling (from spawn point) while not aggroed
     int patrollingWaitingTime_ms {3000};    // Base time waiting before changing direction while patrolling (ms)
-    int startingTime {0};       // Starting time for waiting 
+    int waitingStartTime {0};   // Starting time for waiting 
     int waitingTime {0};        // Actual time time to wait. Is set and reset by TimePassed function
-    int chasingRange;            // Area from spawn point to chase player 
+    int chasingRange;           // Area from spawn point to chase player
+    int attackCooldown_ms{1000};    // Cooldown for attack action
 
     std::shared_ptr<Character> player;  
 
@@ -33,16 +34,19 @@ public:
     void setHearRange(int range)        { hearRange = range; }
     void setPatrollingRange(int range)  { patrollingRange = range; }
     void setPatrolWaitTime(int time)    { patrollingWaitingTime_ms = time; }
-    void setChasingArea(int range)       { chasingRange = range; }
+    void setChasingRange(int range)     { chasingRange = range; }
+    void setAttackCooldown(int cooldown)     { attackCooldown_ms = cooldown; }
 
     void Update(Enemy* enemy);
     void Patrole(Enemy* enemy);
     void ScanAround(Enemy* enemy);
     void Charge(Enemy* enemy);
     void Attack(Enemy* enemy);
+    void Wait(Enemy* enemy);
 
     // "Waiting" function
     bool TimePassed(int time, bool random = false, float minMultiplier = 1, float maxMultiplier = 1);
+    bool AttackCooldownPassed(Enemy* enemy);
     bool playerIsInSight(Enemy* enemy);
     bool playerIsInAttackRange(Enemy* enemy);
 

@@ -33,7 +33,7 @@ public:
     virtual void Run(float dt);
     virtual void Fall(float dt);
     virtual void Roll(float dt)     {dt = dt;};
-    virtual void Attack(float dt)   {dt = dt;};
+    virtual void Attack()   {};
     virtual void Block()            {};
     virtual void Jump(float dt)     {dt = dt;};
 
@@ -43,7 +43,7 @@ public:
 
 protected:
     int m_AttackEnds{0};                //  Time when the last attack ended
-    int m_TimeBetweenAttacks{800};      //  Time between attacks in combo
+    int m_TimeBetweenAttacks{0};      //  Time between attacks in combo
     bool isVulnerable {true};           //  Enemy can take damage 
     
     float m_RunSpeedInFrames;           //  Movement speed for aggroed state

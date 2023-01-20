@@ -18,22 +18,30 @@ void AI::Update(Enemy* enemy)
     {
         return;
     }
+    
     ScanAround(enemy);
-    if (enemy->isAggroed)
+    
+    if (!enemy->isAggroed)
     {
-        SDL_Log("%s: Aggroed!", SDL_FUNCTION);
-        if (playerIsInAttackRange(enemy))
-        {
-            SDL_Log("%s: Attacking!", SDL_FUNCTION);
-            Attack(enemy);
-            return;
-        }
+        Patrole(enemy);
+        return;
+    }
 
+    if (!playerIsInAttackRange(enemy))
+    {
         Charge(enemy);
         return;
     }
     
-    Patrole(enemy);
+    if (!AttackCooldownPassed(enemy))
+    {
+        // ToDo: defence between attacks
+        Wait(enemy);
+        return;
+    }
+    
+    Attack(enemy);
+    return;
 }
 
 void AI::Patrole(Enemy* enemy) 
@@ -104,28 +112,38 @@ void AI::Attack(Enemy* enemy)
     enemy->m_ComboState = Character::ComboState::HIT_1;
 }
 
+void AI::Wait(Enemy* enemy)
+{
+    enemy->m_Condition = Enemy::Condition::IsIdle;
+}
+
 
 bool AI::TimePassed(int time, bool random, float minMultiplier, float maxMultiplier) 
 {
     // Seting variables once at the start of waiting cycle
-    if (startingTime == 0)
+    if (waitingStartTime == 0)
     {
-        startingTime = Timer::getInstance()->GetLastTime();
+        waitingStartTime = Timer::getInstance()->GetLastTime();
         waitingTime = time;
     
         if (random)
-            waitingTime = time * minMultiplier + startingTime % (int)(time * (maxMultiplier - minMultiplier));
+            waitingTime = time * minMultiplier + waitingStartTime % (int)(time * (maxMultiplier - minMultiplier));
     }
 
     // Reseting variables at the end of the waiting cycle
-    if (Timer::getInstance()->GetLastTime() >= startingTime + waitingTime)
+    if (Timer::getInstance()->GetLastTime() >= waitingStartTime + waitingTime)
     {
-        startingTime = 0;
+        waitingStartTime = 0;
         waitingTime = 0;
         return true;
     }
 
     return false;
+}
+
+bool AI::AttackCooldownPassed(Enemy* enemy)
+{
+    return (Timer::getInstance()->GetLastTime() >= enemy->m_AttackEnds + attackCooldown_ms);
 }
 
 bool AI::playerIsInSight(Enemy* enemy)
