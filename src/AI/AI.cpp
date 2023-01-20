@@ -14,7 +14,8 @@ AI::AI(BehaviorType behaveType) : Behavior { behaveType }
 void AI::Update(Enemy* enemy) 
 {
     if (enemy->m_Condition == Character::Condition::Attacking || 
-        enemy->m_Condition == Character::Condition::Falling)
+        enemy->m_Condition == Character::Condition::Falling ||
+        enemy->m_Condition == Character::Condition::isHurt)
     {
         return;
     }
@@ -29,19 +30,18 @@ void AI::Update(Enemy* enemy)
 
     if (!playerIsInAttackRange(enemy))
     {
-        Charge(enemy);
+        Run(enemy);
         return;
     }
     
     if (!AttackCooldownPassed(enemy))
     {
         // ToDo: defence between attacks
-        Wait(enemy);
+        Idle(enemy);
         return;
     }
     
     Attack(enemy);
-    return;
 }
 
 void AI::Patrole(Enemy* enemy) 
@@ -61,7 +61,7 @@ void AI::Patrole(Enemy* enemy)
     if (enemy->GetPosition()->X <= enemy->spawnX - patrollingRange || 
         enemy->GetPosition()->X > enemy->spawnX + patrollingRange)
     {
-        enemy->m_Condition = Condition::IsIdle;
+        Idle(enemy);
     }
 }
 
@@ -101,7 +101,7 @@ void AI::ScanAround(Enemy* enemy)
 
 
 
-void AI::Charge(Enemy* enemy)
+void AI::Run(Enemy* enemy)
 {
     enemy->m_Condition = Enemy::Condition::Running;
 }
@@ -112,7 +112,7 @@ void AI::Attack(Enemy* enemy)
     enemy->m_ComboState = Character::ComboState::HIT_1;
 }
 
-void AI::Wait(Enemy* enemy)
+void AI::Idle(Enemy* enemy)
 {
     enemy->m_Condition = Enemy::Condition::IsIdle;
 }

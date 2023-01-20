@@ -13,6 +13,7 @@
 
   <animation name="idle" row="4" count="4" start="0" time="160" x="40" y="14" width="33" height="66"/>
   <animation name="run" row="3" count="12" start="0" time="80" x="40" y="14" width="33" height="66"/>
+  <animation name="hurt" row="4" count="3" start="5" time="120" x="40" y="14" width="33" height="66"/>
   <animation name="attack1" row="1" count="7" start="0" time="60" x="40" y="14" width="33" height="66"
              atkColX="27" atkColY="0" atkColW="101" atkColH="56"/>
   <animation name="attack2" row="1" count="6" start="7" time="60" x="40" y="14" width="33" height="66" 

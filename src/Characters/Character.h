@@ -33,7 +33,8 @@ public:
         Jumping,
         Falling,
         Attacking,
-        Blocking
+        Blocking,
+        isHurt
     };
 
     enum ComboState {

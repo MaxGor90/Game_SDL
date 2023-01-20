@@ -39,6 +39,9 @@ void Enemy::Update(float dt)
 
     switch (m_Condition)
     {
+    case isHurt:
+        Hurt();
+        return;
     case Attacking:
         Attack();
         return;
@@ -146,9 +149,16 @@ void Enemy::Fall(float dt)
     m_Animation->UpdateCycle();
 }
 
+void Enemy::Hurt()
+{
+    CheckDirectionSetParams(m_AnimationSequences.at("hurt"));
+    if (m_Animation->UpdateSingle())
+        m_Condition = Falling;        
+}
 
 
-/*--------------------------------------------------------------------------------------------*/
+
+/*--------------------------------------SPAWNER----------------------------------------------------*/
 std::shared_ptr<EnemySpawner> EnemySpawner::EnemySpawnerInstance {nullptr};
 
 void EnemySpawner::SpawnEnemies(const std::string& enemyList, const std::string& levelName) 

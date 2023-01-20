@@ -40,9 +40,9 @@ public:
     void Update(Enemy* enemy);
     void Patrole(Enemy* enemy);
     void ScanAround(Enemy* enemy);
-    void Charge(Enemy* enemy);
+    void Run(Enemy* enemy);
     void Attack(Enemy* enemy);
-    void Wait(Enemy* enemy);
+    void Idle(Enemy* enemy);
 
     // "Waiting" function
     bool TimePassed(int time, bool random = false, float minMultiplier = 1, float maxMultiplier = 1);

@@ -20,8 +20,9 @@ public:
     virtual void Roll(float dt);
     virtual void Jump(float dt);
     virtual void Fall(float dt);
-    virtual void Attack(float dt);
+    virtual void Attack();
     virtual void Block();
+    virtual void Hurt();
     
     virtual void Draw();
     virtual void Update(float dt);

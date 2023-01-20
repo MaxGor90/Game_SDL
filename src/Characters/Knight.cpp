@@ -36,8 +36,11 @@ void Knight::Update(float dt)
 {
     switch (m_Condition)
     {
+    case isHurt:
+        Hurt();
+        return;
     case Attacking:
-        Attack(dt);
+        Attack();
         return;
     case Rolling:
         Roll(dt);
@@ -99,7 +102,7 @@ void Knight::Idle(float dt)
     {
         m_Condition = Attacking;
         m_ComboState = HIT_1;
-        Attack(dt);
+        Attack();
         return;
     }
 
@@ -169,7 +172,7 @@ void Knight::Run(float dt)
     {
         m_Condition = Attacking;
         m_ComboState = HIT_1;
-        Attack(dt);
+        Attack();
         return;
     }
 
@@ -246,7 +249,7 @@ void Knight::Jump(float dt)
         m_Animation->SetAnimIsOver();
         m_ComboState = HIT_1;
         m_Condition = Attacking;
-        Attack(dt);
+        Attack();
         return;
     }
     
@@ -287,7 +290,7 @@ void Knight::Fall(float dt)
     {
         m_ComboState = HIT_1;
         m_Condition = Attacking;
-        Attack(dt);
+        Attack();
     }
 
     m_RigidBody->Update(dt);
@@ -303,7 +306,7 @@ void Knight::Fall(float dt)
     m_Animation->UpdateCycle();
 }
 
-void Knight::Attack(float dt)
+void Knight::Attack()
 {
     m_RigidBody->StopX();
     m_RigidBody->UnsetForce();
@@ -407,6 +410,13 @@ void Knight::Block()
 
     CheckCollisions();
     m_Animation->UpdateCycle();
+}
+
+void Knight::Hurt()
+{
+    CheckDirectionSetParams(m_AnimationSequences.at("hurt"));         
+    if (m_Animation->UpdateSingle())
+        m_Condition = Falling;
 }
 
 

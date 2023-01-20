@@ -38,6 +38,7 @@ public:
     virtual void Attack()   {};
     virtual void Block()            {};
     virtual void Jump(float dt)     {dt = dt;};
+    virtual void Hurt();
 
     virtual void SetAggroed()   { isAggroed = true; }
     virtual void SetNotAggroed()   { isAggroed = false; }
