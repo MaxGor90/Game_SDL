@@ -1,5 +1,5 @@
-#ifndef H_CHARACTER
-#define H_CHARACTER
+#ifndef CHARACTER_H
+#define CHARACTER_H
 
 #include <string>
 #include <memory>
@@ -22,8 +22,8 @@ public:
     {}
 
     enum Direction {
-        forward = 0,
-        backward
+        backward = -1,
+        forward = 1
     };
     
     enum Condition {
@@ -49,6 +49,7 @@ public:
     virtual void Clean() = 0;
 
     void SetDirection(Direction dir) { m_Direction = dir; }
+    void ChangeDirection();
 
     std::string GetAnimParamsSource();
     void LoadAnimations(const std::string& fileSource);
@@ -61,9 +62,10 @@ public:
     virtual void CheckDirectionSetParams(std::shared_ptr<AnimationSequence> animSeq);
     virtual bool CheckCollisions();
 
-protected:
+    virtual std::shared_ptr<SDL_Rect> GetCollisionBox() { return m_CollisionBox; }
+    
 
-    std::string m_Name;
+protected:
 
     bool m_IsInAir {true};
 
@@ -90,4 +92,4 @@ protected:
 };
 
 
-#endif /* H_CHARACTER */
+#endif /* CHARACTER_H */

@@ -17,6 +17,8 @@ class Engine
     SDL_Renderer* m_Renderer {nullptr};
 
     std::shared_ptr<GameMap> m_LevelMap;
+    std::shared_ptr<Character> m_Player {nullptr};
+    friend class AI;
 
     std::vector<std::shared_ptr<Character>> m_Enemies;
     std::shared_ptr<EnemySpawner> m_EnemySpawner;
@@ -45,7 +47,7 @@ public:
 
     inline bool isRunning() { return m_isRunning; }
     inline SDL_Renderer* getRenderer() { return m_Renderer; }   // Render getter
-
+    inline std::shared_ptr<Character> getPalyer() { return m_Player; }
 };
 
 

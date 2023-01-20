@@ -1,5 +1,5 @@
-#ifndef H_ENEMY
-#define H_ENEMY
+#ifndef ENEMY_H
+#define ENEMY_H
 
 #include "Character.h"
 #include <map>
@@ -19,6 +19,7 @@ static const std::map<std::string, enemyType> EnemyTypeMap{
 };
 /*-------------------------------------------------------------*/
 
+class AI;
 
 class Enemy : public Character
 {
@@ -32,12 +33,36 @@ public:
 
     virtual void Idle(float dt);
     virtual void Run(float dt);
-    virtual void Fall(float dt)     {dt = dt;};
+    virtual void Fall(float dt);
     virtual void Roll(float dt)     {dt = dt;};
-    virtual void Attack(float dt)   {dt = dt;};
+    virtual void Attack()   {};
     virtual void Block()            {};
     virtual void Jump(float dt)     {dt = dt;};
+
+    virtual void SetAggroed()   { isAggroed = true; }
+    virtual void SetNotAggroed()   { isAggroed = false; }
+
+
+protected:
+    int m_AttackEnds{0};                //  Time when the last attack ended
+    int m_TimeBetweenAttacks{0};      //  Time between attacks in combo
+    bool isVulnerable {true};           //  Enemy can take damage 
+    
+    float m_RunSpeedInFrames;           //  Movement speed for aggroed state
+    float m_WalkSpeedInFrames;          //  Movement speed for patrolling (not aggroed) state
+
+    float spawnX, spawnY;               //  Spawn point - for patrolling purpose
+
+    bool isAggroed {false};             //  Aggroed by player - for movement speed 
+    
+    friend class AI;
+
+    std::shared_ptr<AI> m_AI {nullptr};
 };
+
+
+/*--------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------*/
 
 // Enemy creator interface
 class EnemyFactory
@@ -67,4 +92,4 @@ public:
 
 };
 
-#endif /* H_ENEMY */
+#endif /* ENEMY_H */

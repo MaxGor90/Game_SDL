@@ -2,8 +2,10 @@
 #include "Skeleton.h"
 #include "SkeletonTest.h"
 #include "Engine.h"
+#include "Input.h"
 #include "tinyxml2.h"
 #include "SDL.h"
+#include "AI.h"
 
 
 
@@ -15,6 +17,9 @@ Enemy::Enemy(std::shared_ptr<ObjParams> params) :
     m_RigidBody = std::make_unique<RigidBody>();
     
     m_Collision = Collision::GetInstance();
+
+    spawnX = params->X;
+    spawnY = params->Y;
 }
 
 
@@ -31,10 +36,12 @@ void Enemy::Draw()
 
 void Enemy::Update(float dt)
 {
+    m_AI->Update(this);
+
     switch (m_Condition)
     {
     case Attacking:
-        Attack(dt);
+        Attack();
         return;
     case Rolling:
         Roll(dt);
@@ -73,6 +80,21 @@ void Enemy::Idle(float dt)
 
     m_ComboState = NO;
 
+    if (Input::getInstance()->isKeyDown(SDL_SCANCODE_Q))
+    {
+        m_Condition = Attacking;
+        m_ComboState = HIT_1;
+        Attack();
+        return;
+    }
+    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_J) ||
+         Input::getInstance()->isKeyDown(SDL_SCANCODE_L) )
+    {
+        m_Condition = Running;
+        Run(dt);
+        return;
+    }
+
     CheckCollisions();
     m_Animation->UpdateCycle();
 }
@@ -80,17 +102,54 @@ void Enemy::Idle(float dt)
 void Enemy::Run(float dt) 
 {
     m_RigidBody->UnsetForce();
-    CheckDirectionSetParams(m_AnimationSequences.at("run"));                         // Run
+    CheckDirectionSetParams(m_AnimationSequences.at("run")); 
 
+    // Running or walking depending on aggroed state, direction of force depends on m_Direction
+    m_RigidBody->ApplyForceX((isAggroed? m_RunSpeedInFrames : m_WalkSpeedInFrames) / TARGET_FPS * (int)m_Direction);
+
+    if (!m_Collision->GetInstance()->CollisionWithMapY(&m_Transform, m_CollisionBox))
+    {
+        m_Condition = Falling;
+        Fall(dt);
+        return;
+    }
+
+    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_Q) )
+    {
+        m_Condition = Attacking;
+        m_ComboState = HIT_1;
+        Attack();
+        return;
+    }
     m_RigidBody->Update(dt);
 
     CheckCollisions();
 
     m_Animation->UpdateCycle();
+}
 
+void Enemy::Fall(float dt)
+{
+    CheckDirectionSetParams(m_AnimationSequences.at("fall"));        
+
+    m_RigidBody->UnsetForce();
+
+    m_RigidBody->Update(dt);
+
+    CheckCollisions();
+
+    if (m_Condition == IsIdle)
+    {
+        Idle(dt);
+        return;
+    }
+
+    m_Animation->UpdateCycle();
 }
 
 
+
+/*--------------------------------------------------------------------------------------------*/
 std::shared_ptr<EnemySpawner> EnemySpawner::EnemySpawnerInstance {nullptr};
 
 void EnemySpawner::SpawnEnemies(const std::string& enemyList, const std::string& levelName) 

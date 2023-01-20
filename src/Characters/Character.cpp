@@ -3,21 +3,33 @@
 #include "Character.h"
 #include "tinyxml2.h"
 #include "Engine.h"
+#include "SDL.h"
 
 
-Character::Character(std::shared_ptr<ObjParams> params) :
+Character::Character(std::shared_ptr<ObjParams> params) try :
     GameObject(params)
 {
     m_CollisionBox = std::make_shared<SDL_Rect>( SDL_Rect {0,0,0,0} );
     m_CollisionBoxAtk = std::make_shared<SDL_Rect>( SDL_Rect {0,0,0,0} );
     std::string path;
-    try {
-        path = GetAnimParamsSource();
-    } 
-    catch(const std::string& error) {
-        throw error;
-    };
+    path = GetAnimParamsSource();
     LoadAnimations( path );
+}
+//  Catching exception from GetAnimParamsSource() or LoadAnimations(path)
+catch(const std::string& error) {
+    SDL_Log(error.c_str());
+    throw error;
+};
+
+void Character::ChangeDirection() 
+{
+    if (m_Direction == backward)
+    {
+        SetDirection(forward);
+        return;
+    }
+
+    SetDirection(backward);
 }
 
 void Character::LoadAnimations(const std::string& fileSource)
@@ -27,7 +39,7 @@ void Character::LoadAnimations(const std::string& fileSource)
 
     if (doc.Error())
     {
-        std::cerr << "Failed to load the document:" << fileSource << std::endl;
+        throw std::string("Failed to load the document: " + fileSource);
         return;
     }
 
@@ -71,7 +83,8 @@ void Character::SetParams(std::shared_ptr<AnimationSequence> animSequence, SDL_R
     if (animSequence->getCollisionBox() != nullptr)
         m_CollisionBoxInsideFrame = animSequence->getCollisionBox();
     
-    m_CollisionBoxAtkInsideFrame = animSequence->getAttackCollisionBox();
+    if (animSequence->getAttackCollisionBox() != nullptr)
+        m_CollisionBoxAtkInsideFrame = animSequence->getAttackCollisionBox();
     m_Width = TextureManager::getInstance()->GetTextureWidth(m_TextureID);
     m_Height = TextureManager::getInstance()->GetTextureHeight(m_TextureID);
 
@@ -125,11 +138,14 @@ void Character::CollisionBoxAtkRecalc()
         break;
     case NO:
     default:
-        return;
+        //  For enemy AI to check distance for attacking
+        animID = "attack1";     
+        break;
     }
     
-    int atkColBoxX = m_AnimationSequences.at(animID)->getAttackCollisionBox()->x;
-    int atkColBoxWidth = m_AnimationSequences.at(animID)->getAttackCollisionBox()->w;
+    m_CollisionBoxAtkInsideFrame = m_AnimationSequences.at(animID)->getAttackCollisionBox();
+    m_CollisionBoxAtk->h = m_CollisionBoxAtkInsideFrame->h;
+    m_CollisionBoxAtk->w = m_CollisionBoxAtkInsideFrame->w;
     
     switch (m_Direction)
     {
@@ -138,7 +154,7 @@ void Character::CollisionBoxAtkRecalc()
         m_CollisionBoxAtk->y = (int)m_Transform->m_Y + m_CollisionBoxAtkInsideFrame->y;         
         return;
     case backward:
-        m_CollisionBoxAtk->x = (int)m_Transform->m_X + m_Width - atkColBoxX - atkColBoxWidth;
+        m_CollisionBoxAtk->x = (int)m_Transform->m_X + m_Width - m_CollisionBoxAtkInsideFrame->x - m_CollisionBoxAtkInsideFrame->w;
         m_CollisionBoxAtk->y = (int)m_Transform->m_Y + m_CollisionBoxAtkInsideFrame->y;         
         return;
     }

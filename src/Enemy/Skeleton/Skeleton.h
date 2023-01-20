@@ -1,5 +1,5 @@
-#ifndef H_SKELETON
-#define H_SKELETON
+#ifndef SKELETON_H
+#define SKELETON_H
 
 #include "Enemy.h"
 
@@ -11,8 +11,7 @@ public:
     virtual ~Skeleton()
     {}
 
-    virtual void Fall(float dt);
-    virtual void Attack(float dt);
+    virtual void Attack();
 };
 
 
@@ -26,4 +25,4 @@ public:
     }
 };
 
-#endif /* H_SKELETON */
+#endif /* SKELETON_H */

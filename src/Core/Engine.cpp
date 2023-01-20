@@ -12,8 +12,6 @@
 
 
 std::shared_ptr<Engine> Engine::s_EngineInstance {nullptr};
-std::unique_ptr<Knight> Player {nullptr};
-
 
 Engine::Engine()
 {}
@@ -61,11 +59,17 @@ bool Engine::Init()
 
     TextureManager::getInstance()->LoadTextures("../assets/Textures.xml");
 
-    Player = std::make_unique<Knight>( std::make_shared<ObjParams>( "Knight", 100, 480) );
+    m_Player = std::make_unique<Knight>( std::make_shared<ObjParams>( "Knight", 100, 480) );
     m_EnemySpawner = EnemySpawner::getInstance();
-    m_EnemySpawner->SpawnEnemies("../Objects/EnemyList.xml", "level1");
+    
+    //  Spawn enemies from list keeping in mind possible exceptions
+    try {
+        m_EnemySpawner->SpawnEnemies("../Objects/EnemyList.xml", "level1");
+    } catch(const std::string& error) {
+        return m_isRunning = false;
+    }
 
-    Camera::getInstance()->SetTarget(Player->GetPosition());
+    Camera::getInstance()->SetTarget(m_Player->GetPosition());
     
     return m_isRunning = true;
 }
@@ -84,7 +88,7 @@ void Engine::Update()
 {
     float dt {Timer::getInstance()->GetDeltaTime()};
     m_LevelMap->Update();
-    Player->Update(dt);
+    m_Player->Update(dt);
     for (auto enemy : m_Enemies)
         enemy->Update(dt);
     m_LevelMap->UpdateFront();
@@ -98,7 +102,7 @@ void Engine::Render()
 
     m_LevelMap->Render();
 
-    Player->Draw();
+    m_Player->Draw();
     for (auto enemy : m_Enemies)
         enemy->Draw();
 

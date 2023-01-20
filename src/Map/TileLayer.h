@@ -13,8 +13,8 @@ struct Tileset
     std::string Name, Source;
 };
 
-typedef std::vector<Tileset> TilesetList;
-typedef std::vector< std::vector<int> > TileMap;
+using TilesetList = std::vector<Tileset>;
+using TileMap = std::vector< std::vector<int> >;
 
 class TileLayer : public Layer
 {

@@ -21,7 +21,7 @@ public:
     ~Collision()
     {}
 
-    bool CheckCollision(std::shared_ptr<SDL_Rect> collisionBox1, std::shared_ptr<SDL_Rect> collisionBox2);
+    static bool CheckCollision(std::shared_ptr<SDL_Rect> collisionBox1, std::shared_ptr<SDL_Rect> collisionBox2);
     bool CollisionWithMapX(std::shared_ptr<Transform>* position, std::shared_ptr<SDL_Rect> collisionBox);
     bool CollisionWithMapY(std::shared_ptr<Transform>* position, std::shared_ptr<SDL_Rect> collisionBox);
 
