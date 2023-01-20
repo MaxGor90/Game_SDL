@@ -1,6 +1,5 @@
 #include "Enemy.h"
 #include "Skeleton.h"
-#include "SkeletonTest.h"
 #include "Engine.h"
 #include "Input.h"
 #include "tinyxml2.h"
@@ -202,9 +201,6 @@ void EnemySpawner::SpawnEnemies(const std::string& enemyList, const std::string&
                 {
                 case skeleton_melee:
                     m_Factories[type] = std::shared_ptr<SkeletonFactory>(new SkeletonFactory());
-                    break;
-                case skeleton_test:
-                    m_Factories[type] = std::shared_ptr<SkeletonTestFactory>(new SkeletonTestFactory());
                     break;
                 default:
                     break; 

@@ -15,7 +15,7 @@ enum enemyType
 // Map with enemy types and their names for parsing EnemyList.xml
 static const std::map<std::string, enemyType> EnemyTypeMap{
     {"skeleton_melee", enemyType::skeleton_melee},
-    {"skeleton_test", enemyType::skeleton_test}
+    // {"skeleton_test", enemyType::skeleton_test}
 };
 /*-------------------------------------------------------------*/
 
