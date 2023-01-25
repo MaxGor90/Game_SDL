@@ -3,8 +3,6 @@
 #include "Global.h"
 
 
-std::shared_ptr<Input> Input::s_InputInstance = nullptr;
-
 Input::Input()
 {
     m_KeyStates = SDL_GetKeyboardState(nullptr);
@@ -20,7 +18,7 @@ void Input::Listen()
         switch (event.type)
         {
         case SDL_QUIT:
-            Engine::getInstance()->Quit();
+            Engine::getInstance().Quit();
             break;
         case SDL_KEYUP:
             KeyUp();

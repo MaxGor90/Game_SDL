@@ -43,25 +43,34 @@ public:
         animationType {type}
     {}
 
-    virtual const std::string& getName() { return params->name; }
+    virtual const std::string& getName() const { return params->name; }
     virtual std::shared_ptr<SDL_Rect> getCollisionBox() { return params->collisionBox; }
     virtual std::shared_ptr<SDL_Rect> getAttackCollisionBox() { return nullptr; }
-
+    virtual int getHitFrameStart() const { return 0; }
+    virtual int getHitFrames() const { return 0; }
 };
 
 class AttackAnimationSequence : public AnimationSequence
 {
-public:
     std::shared_ptr<SDL_Rect> attackCollisionBox;
+    int hitFrameStart;
+    int hitFrames;
+
+public:
+
 
     AttackAnimationSequence( animType type, const std::string& Name, int Row, int frCount, int startFr, int frTime, std::shared_ptr<SDL_Rect> colBox,
-                            std::shared_ptr<SDL_Rect> atkColBox ) :
+                            std::shared_ptr<SDL_Rect> atkColBox, int hitFrStart, int hitFr ) :
         AnimationSequence( type, Name, Row, frCount, startFr, frTime, colBox),
-        attackCollisionBox {atkColBox}
+        attackCollisionBox {atkColBox}, hitFrameStart {hitFrStart}, hitFrames {hitFr}
     {}
 
     std::shared_ptr<SDL_Rect> getAttackCollisionBox() override 
     {   return attackCollisionBox; }
+
+    int getHitFrameStart() const override { return hitFrameStart; }
+    int getHitFrames() const override { return hitFrames; }
+    
 };
 
 

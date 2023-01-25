@@ -3,15 +3,17 @@
 #include "Camera.h"
 #include "tinyxml2.h"
 
-std::shared_ptr<TextureManager> TextureManager::s_TextureManagerInstance = nullptr;
 
-std::shared_ptr<TextureManager> TextureManager::getInstance()
+TextureManager& TextureManager::getInstance()
 {
-    return  s_TextureManagerInstance = (s_TextureManagerInstance == nullptr)? std::make_shared<TextureManager>() : s_TextureManagerInstance;
+    static TextureManager TextureManagerInstance;
+    return  TextureManagerInstance;
 }
 
 TextureManager::~TextureManager()
-{}
+{
+    Clean();
+}
 
 bool TextureManager::Load(const std::string& id, const std::string& filename, int width, int height, double opacity)
 {
@@ -22,7 +24,7 @@ bool TextureManager::Load(const std::string& id, const std::string& filename, in
         return false;
     }
 
-    SDL_Texture* texture { SDL_CreateTextureFromSurface(Engine::getInstance()->getRenderer(), surface) };
+    SDL_Texture* texture { SDL_CreateTextureFromSurface(Engine::getInstance().getRenderer(), surface) };
     if( texture == nullptr )
     {
         SDL_Log("Failed to create texture from surface: %s", SDL_GetError());
@@ -72,7 +74,7 @@ void TextureManager::Draw(const std::string& id, int x, int y, SDL_RendererFlip 
 {
     SDL_Rect sourceRect = { 0, 0, m_TextureMap[id].Width, m_TextureMap[id].Height };    // Source image   
     SDL_Rect destRect = { x, y, m_TextureMap[id].Width, m_TextureMap[id].Height };      // Destination place for image
-    SDL_RenderCopyEx(Engine::getInstance()->getRenderer(), m_TextureMap[id].Texture, &sourceRect, &destRect, 0, nullptr, flip);
+    SDL_RenderCopyEx(Engine::getInstance().getRenderer(), m_TextureMap[id].Texture, &sourceRect, &destRect, 0, nullptr, flip);
 }
 
 void TextureManager::DrawFrame(const std::string& id, int x, int y, int row, int frame, SDL_RendererFlip flip)
@@ -81,26 +83,26 @@ void TextureManager::DrawFrame(const std::string& id, int x, int y, int row, int
     int height {m_TextureMap[id].Height};
 
     SDL_Rect sourceRect = { width * frame, height * (row - 1), width, height };    // Source image in a sheet, raw count from 1 rather than from 0  
-    Vector2D cam = Camera::getInstance()->GetPosition();
+    Vector2D cam = Camera::getInstance().GetPosition();
     SDL_Rect destRect = { x - (int)(cam.m_X), y - (int)(cam.m_Y), width, height };      // Destination place for image
-    SDL_RenderCopyEx(Engine::getInstance()->getRenderer(), m_TextureMap[id].Texture, &sourceRect, &destRect, 0, nullptr, flip);
+    SDL_RenderCopyEx(Engine::getInstance().getRenderer(), m_TextureMap[id].Texture, &sourceRect, &destRect, 0, nullptr, flip);
 }
 
 void TextureManager::DrawTile(const std::string& tilesetID, int x, int y, int tilesize, int row, int col, SDL_RendererFlip flip)
 {
     SDL_Rect sourceRect = { tilesize * col, tilesize * row, tilesize, tilesize };    // Source image in a tileset, raw count from 0
-    Vector2D cam = Camera::getInstance()->GetPosition();
+    Vector2D cam = Camera::getInstance().GetPosition();
     SDL_Rect destRect = { x - (int)(cam.m_X), y - (int)(cam.m_Y), tilesize, tilesize };      // Destination place for image
-    SDL_RenderCopyEx(Engine::getInstance()->getRenderer(), m_TextureMap[tilesetID].Texture, &sourceRect, &destRect, 0, nullptr, flip);
+    SDL_RenderCopyEx(Engine::getInstance().getRenderer(), m_TextureMap[tilesetID].Texture, &sourceRect, &destRect, 0, nullptr, flip);
 }
 
 
 void TextureManager::DrawImage(const std::string& id, int x, int y, int width, int height, float speed, SDL_RendererFlip flip)
 {
     SDL_Rect sourceRect = { 0, 0, width, height };    // Source image
-    Vector2D cam = Camera::getInstance()->GetPosition();
+    Vector2D cam = Camera::getInstance().GetPosition();
     SDL_Rect destRect = { x - (int)(cam.m_X*speed), y - (int)(cam.m_Y*speed), width, height };      // Destination place for image, moves while char is moving with passed speed
-    SDL_RenderCopyEx(Engine::getInstance()->getRenderer(), m_TextureMap[id].Texture, &sourceRect, &destRect, 0, nullptr, flip);
+    SDL_RenderCopyEx(Engine::getInstance().getRenderer(), m_TextureMap[id].Texture, &sourceRect, &destRect, 0, nullptr, flip);
 }
 
 
@@ -119,7 +121,7 @@ void TextureManager::Clean()
 
     m_TextureMap.clear();
 
-    SDL_Log("%s: Texture map cleared!", SDL_FUNCTION);
+    SDL_Log("TextureManager: Texture map cleared!");
 }
 
 

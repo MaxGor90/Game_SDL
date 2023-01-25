@@ -8,10 +8,9 @@
 #include "Camera.h"
 #include "Global.h"
 #include "Skeleton.h"
+#include "Battle.h"
 
 
-
-std::shared_ptr<Engine> Engine::s_EngineInstance {nullptr};
 
 Engine::Engine()
 {}
@@ -19,10 +18,10 @@ Engine::Engine()
 Engine::~Engine()
 {}
 
-std::shared_ptr<Engine> Engine::getInstance()
+Engine& Engine::getInstance()
 {
-    //  One instance of Engine must be running
-    return s_EngineInstance = (s_EngineInstance == nullptr)? std::make_shared<Engine>() : s_EngineInstance;
+    static Engine EngineInstance;
+    return EngineInstance;
 }
 
 bool Engine::Init()
@@ -50,14 +49,14 @@ bool Engine::Init()
         return false;
     }
 
-    if (!MapParser::GetInstance()->Load())
+    if (!MapParser::getInstance().Load())
     {
         std::cout << "Failed to load the map." << std::endl;
     }
 
-    m_LevelMap = MapParser::GetInstance()->GetMap("level1");
+    m_LevelMap = MapParser::getInstance().GetMap("level1");
 
-    TextureManager::getInstance()->LoadTextures("../assets/Textures.xml");
+    TextureManager::getInstance().LoadTextures("../assets/Textures.xml");
 
     m_Player = std::make_unique<Knight>( std::make_shared<ObjParams>( "Knight", 100, 480) );
     m_EnemySpawner = EnemySpawner::getInstance();
@@ -69,7 +68,7 @@ bool Engine::Init()
         return m_isRunning = false;
     }
 
-    Camera::getInstance()->SetTarget(m_Player->GetPosition());
+    Camera::getInstance().SetTarget(m_Player->GetPosition());
     
     return m_isRunning = true;
 }
@@ -86,13 +85,14 @@ void Engine::Quit()
 
 void Engine::Update()
 {
-    float dt {Timer::getInstance()->GetDeltaTime()};
+    float dt {Timer::getInstance().GetDeltaTime()};
     m_LevelMap->Update();
+    Battle::getInstance().Update();
     m_Player->Update(dt);
     for (auto enemy : m_Enemies)
         enemy->Update(dt);
     m_LevelMap->UpdateFront();
-    Camera::getInstance()->Update(dt);
+    Camera::getInstance().Update();
 }
 
 void Engine::Render()
@@ -113,7 +113,7 @@ void Engine::Render()
 
 void Engine::Events()
 {
-    Input::getInstance()->Listen();
+    Input::getInstance().Listen();
 }
 
 

@@ -4,25 +4,23 @@
 
 
 
-std::shared_ptr<Collision> Collision::s_CollisionInstance {nullptr};
-
 Collision::Collision()
 {
-    for (auto layer : Engine::getInstance()->getMap()->GetMapCollisionLayers())
+    for (auto layer : Engine::getInstance().getMap()->GetMapCollisionLayers())
     {
         if (layer->LayerType == Layer::TILE)
             m_CollisionMaps.push_back(std::make_shared<TileMap>(std::dynamic_pointer_cast<TileLayer>(layer)->GetTileMap()));
     }
 }
 
-//  Collision between two collision boxes
-bool Collision::CheckCollision(std::shared_ptr<SDL_Rect> collisionBox1, std::shared_ptr<SDL_Rect> collisionBox2)
+//  Collision between two collision boxes with optional overlapping
+bool Collision::CheckCollision(std::shared_ptr<SDL_Rect> collisionBox1, std::shared_ptr<SDL_Rect> collisionBox2, int overlapX, int overlapY)
 {
-    bool xCollision {   (collisionBox1->x + collisionBox1->w > collisionBox2->x) &&
-                        (collisionBox1->x < collisionBox2->x + collisionBox2->w) };
+    bool xCollision {   (collisionBox1->x + collisionBox1->w > collisionBox2->x + overlapX) &&
+                        (collisionBox1->x + overlapX < collisionBox2->x + collisionBox2->w) };
 
-    bool yCollision {   (collisionBox1->y + collisionBox1->h > collisionBox2->y) &&
-                        (collisionBox1->y < collisionBox2->y + collisionBox2->h) };
+    bool yCollision {   (collisionBox1->y + collisionBox1->h > collisionBox2->y + overlapY) &&
+                        (collisionBox1->y + overlapY < collisionBox2->y + collisionBox2->h) };
 
     return xCollision && yCollision;
 }
@@ -32,9 +30,9 @@ bool Collision::CheckCollision(std::shared_ptr<SDL_Rect> collisionBox1, std::sha
 //  If collision occurs transform->m_X is moved to closest to collision position without intersection +1
 bool Collision::CollisionWithMapX(std::shared_ptr<Transform>* position, std::shared_ptr<SDL_Rect> collisionBox)
 {
-    int rowCount { Engine::getInstance()->getMap()->getRowCount() };
-    int colCount { Engine::getInstance()->getMap()->getColCount() };
-    int tileSize { Engine::getInstance()->getMap()->getTileSize() };
+    int rowCount { Engine::getInstance().getMap()->getRowCount() };
+    int colCount { Engine::getInstance().getMap()->getColCount() };
+    int tileSize { Engine::getInstance().getMap()->getTileSize() };
 
     //  Position of Collision Box inside the Frame
     int CollisionDeltaX {collisionBox->x - (int)(*position)->m_X};
@@ -80,9 +78,9 @@ bool Collision::CollisionWithMapX(std::shared_ptr<Transform>* position, std::sha
 //  If collision occurs transform->m_Y is moved to closest collision position without intersection 
 bool Collision::CollisionWithMapY(std::shared_ptr<Transform>* position, std::shared_ptr<SDL_Rect> collisionBox)
 {
-    int rowCount { Engine::getInstance()->getMap()->getRowCount() };
-    int colCount { Engine::getInstance()->getMap()->getColCount() };
-    int tileSize { Engine::getInstance()->getMap()->getTileSize() };
+    int rowCount { Engine::getInstance().getMap()->getRowCount() };
+    int colCount { Engine::getInstance().getMap()->getColCount() };
+    int tileSize { Engine::getInstance().getMap()->getTileSize() };
 
     //  Position of Collision Box inside the Frame
     int CollisionDeltaY {collisionBox->y - (int)(*position)->m_Y};

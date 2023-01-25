@@ -21,8 +21,8 @@ struct ObjParams
                 float x, float y,
                 SDL_RendererFlip flip = SDL_FLIP_NONE ) :
         TextureID {id},
-        Width {TextureManager::getInstance()->GetTextureWidth(TextureID)}, 
-        Height {TextureManager::getInstance()->GetTextureHeight(TextureID)},
+        Width {TextureManager::getInstance().GetTextureWidth(TextureID)}, 
+        Height {TextureManager::getInstance().GetTextureHeight(TextureID)},
         X {x}, Y {y},
         Flip {flip}
     {}        

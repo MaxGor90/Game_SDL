@@ -18,6 +18,7 @@ std::shared_ptr<AnimationSequence> AnimationParser::ParseAnimationSequence(tinyx
     int colX, colY, colW, colH;
     animType type {animType::basic};
     int atkColX {0}, atkColY {0}, atkColW {0}, atkColH {0};
+    int hitFrameStart {0}, hitFrames {0};
     std::shared_ptr<SDL_Rect> collisionBox {nullptr};
     std::shared_ptr<SDL_Rect> attackCollisionBox {nullptr};
 
@@ -46,6 +47,9 @@ std::shared_ptr<AnimationSequence> AnimationParser::ParseAnimationSequence(tinyx
         type = animType::attack;
     }
 
+    hitFrameStart = el->FindAttribute("hitFrameStart")? el->IntAttribute("hitFrameStart") : 0;
+    hitFrames = el->FindAttribute("hitFrames")? el->IntAttribute("hitFrames") : 0;
+
     switch (type)
     {
     case animType::basic:
@@ -54,7 +58,7 @@ std::shared_ptr<AnimationSequence> AnimationParser::ParseAnimationSequence(tinyx
     {
         // Making derived object and returning base class pointer
         return std::make_shared<AttackAnimationSequence>(AttackAnimationSequence( type, name, row, frameCount, startFrame, frameTime, 
-                                                                            collisionBox, attackCollisionBox) );
+                                                                            collisionBox, attackCollisionBox, hitFrameStart, hitFrames) );
     }
     default:
         return nullptr;

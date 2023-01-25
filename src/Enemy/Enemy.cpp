@@ -15,7 +15,7 @@ Enemy::Enemy(std::shared_ptr<ObjParams> params) :
 
     m_RigidBody = std::make_unique<RigidBody>();
     
-    m_Collision = Collision::GetInstance();
+    m_Collision = Collision::getInstance();
 
     spawnX = params->X;
     spawnY = params->Y;
@@ -82,15 +82,15 @@ void Enemy::Idle(float dt)
 
     m_ComboState = NO;
 
-    if (Input::getInstance()->isKeyDown(SDL_SCANCODE_Q))
+    if (Input::getInstance().isKeyDown(SDL_SCANCODE_Q))
     {
         m_Condition = Attacking;
         m_ComboState = HIT_1;
         Attack();
         return;
     }
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_J) ||
-         Input::getInstance()->isKeyDown(SDL_SCANCODE_L) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_J) ||
+         Input::getInstance().isKeyDown(SDL_SCANCODE_L) )
     {
         m_Condition = Running;
         Run(dt);
@@ -109,14 +109,14 @@ void Enemy::Run(float dt)
     // Running or walking depending on aggroed state, direction of force depends on m_Direction
     m_RigidBody->ApplyForceX((isAggroed? m_RunSpeedInFrames : m_WalkSpeedInFrames) / TARGET_FPS * (int)m_Direction);
 
-    if (!m_Collision->GetInstance()->CollisionWithMapY(&m_Transform, m_CollisionBox))
+    if (!m_Collision.CollisionWithMapY(&m_Transform, m_CollisionBox))
     {
         m_Condition = Falling;
         Fall(dt);
         return;
     }
 
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_Q) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_Q) )
     {
         m_Condition = Attacking;
         m_ComboState = HIT_1;
@@ -218,7 +218,7 @@ void EnemySpawner::SpawnEnemies(const std::string& enemyList, const std::string&
             }
 
             // Spawning enemies directly into m_Enemies vector of Engine class 
-            Engine::getInstance()->m_Enemies.push_back(
+            Engine::getInstance().m_Enemies.push_back(
                 m_Factories.at(type)->Spawn(std::make_shared<ObjParams>(texureID, x, y, flip)) );
         }
     }

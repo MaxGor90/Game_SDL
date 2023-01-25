@@ -12,7 +12,10 @@
 class Input
 {
 private:
-    static std::shared_ptr<Input> s_InputInstance;
+    Input();
+    ~Input()
+    {}
+    
     void KeyUp();
     void KeyDown();
     void MouseKeyUp();
@@ -25,13 +28,11 @@ private:
 
 public:
 
-    Input();
-    ~Input()
-    {}
 
-    static std::shared_ptr<Input> getInstance()
+    static Input& getInstance()
     {
-        return s_InputInstance = (s_InputInstance == nullptr)? std::make_shared<Input>() : s_InputInstance;
+        static Input InputInstance;
+        return InputInstance;
     }    
 
     void Listen();

@@ -6,22 +6,19 @@
 
 class Timer
 {
-
-    static std::shared_ptr<Timer> s_TimerInstance;
+    Timer() {}
+    ~Timer() {}
 
     float m_DeltaTime;
     float m_LastTime {0.0f};
 
 public:
-    Timer() {}
     
-    inline static std::shared_ptr<Timer> getInstance()
+    inline static Timer& getInstance()
     {
-        return s_TimerInstance = (s_TimerInstance == nullptr)? std::make_shared<Timer>() : s_TimerInstance;
+        static Timer TimerInstance;
+        return TimerInstance;
     } 
-
-    ~Timer()
-    {}
 
     void Tick();
 

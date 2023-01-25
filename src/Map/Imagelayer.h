@@ -34,7 +34,7 @@ public:
         m_OffsetY   {offY},
         m_Speed     {speed}
     {
-        TextureManager::getInstance()->Load(img.Name, "../assets/Maps/" + img.Source, img.Width, img.Height, m_Opacity);
+        TextureManager::getInstance().Load(img.Name, "../assets/Maps/" + img.Source, img.Width, img.Height, m_Opacity);
         LayerType = IMAGE;
     }
 

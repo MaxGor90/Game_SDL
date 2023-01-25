@@ -11,12 +11,12 @@ void ImageLayer::Render()
         if (x > 0)
             x -= m_Image.Width * static_cast<int>(m_RepeatX);
 
-        TextureManager::getInstance()->DrawImage(m_Image.Name, x, y, m_Image.Width, m_Image.Height, m_Speed);
+        TextureManager::getInstance().DrawImage(m_Image.Name, x, y, m_Image.Width, m_Image.Height, m_Speed);
         x += m_Image.Width * static_cast<int>(m_RepeatX);
 
-        while ( m_RepeatX && (x < Engine::getInstance()->getMap()->getMapLength()))
+        while ( m_RepeatX && (x < Engine::getInstance().getMap()->getMapLength()))
         {
-            TextureManager::getInstance()->DrawImage(m_Image.Name, x, y, m_Image.Width, m_Image.Height, m_Speed);
+            TextureManager::getInstance().DrawImage(m_Image.Name, x, y, m_Image.Width, m_Image.Height, m_Speed);
             x += m_Image.Width;
         }
 

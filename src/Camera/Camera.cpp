@@ -2,8 +2,6 @@
 #include "Engine.h"
 #include "Global.h"
 
-std::shared_ptr<Camera> Camera::s_CameraInstance = nullptr;
-
 
 Camera::Camera() : 
     m_Viewbox { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT }
@@ -13,7 +11,7 @@ Camera::~Camera()
 {}
 
 
-void Camera::Update(float dt)
+void Camera::Update()
 {
     if (m_Target != nullptr)
     {
@@ -25,8 +23,8 @@ void Camera::Update(float dt)
         if (m_Viewbox.y < 0)
             m_Viewbox.y = 0;
 
-        if (m_Viewbox.x > (Engine::getInstance()->getMap()->getMapLength() - m_Viewbox.w))
-            m_Viewbox.x = Engine::getInstance()->getMap()->getMapLength() - m_Viewbox.w;
+        if (m_Viewbox.x > (Engine::getInstance().getMap()->getMapLength() - m_Viewbox.w))
+            m_Viewbox.x = Engine::getInstance().getMap()->getMapLength() - m_Viewbox.w;
         if (m_Viewbox.y > (SCREEN_HEIGHT - m_Viewbox.h))
             m_Viewbox.y = SCREEN_HEIGHT - m_Viewbox.h;
 

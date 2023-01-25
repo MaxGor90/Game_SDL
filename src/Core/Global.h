@@ -14,6 +14,9 @@ const int SCREEN_HEIGHT {768};
 const int TARGET_FPS {60};
 const float TARGET_DELTATIME {1.3f};
 
+const int attackOverlapX {5}; //    Number of pixels attack hitbox must overlap with character collision box tt score a hit 
+ 
+
 #define GRAVITY 0.6f * (60.0f / TARGET_FPS) * (60.0f / TARGET_FPS)
 
 

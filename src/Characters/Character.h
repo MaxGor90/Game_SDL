@@ -64,6 +64,13 @@ public:
     virtual bool CheckCollisions();
 
     virtual std::shared_ptr<SDL_Rect> GetCollisionBox() { return m_CollisionBox; }
+    virtual std::shared_ptr<SDL_Rect> GetCollisionBoxAtk() { return m_CollisionBoxAtk; }
+    virtual Condition GetCondition() { return m_Condition; }
+    virtual void SetCondition(Condition condition) { m_Condition = condition; }
+
+    virtual void SetHitScored(bool scored) { m_HitScored = scored; }
+    virtual bool GetHitScored() { return m_HitScored; }
+    virtual bool IsHittingFrames() { return m_Animation->IsHitFrame(); }
     
 
 protected:
@@ -72,7 +79,7 @@ protected:
 
     std::unique_ptr<Animation> m_Animation {nullptr};
     std::unique_ptr<RigidBody> m_RigidBody {nullptr};
-    std::shared_ptr<Collision> m_Collision {nullptr};
+    Collision& m_Collision { Collision::getInstance() };
 
     //  Absolute coords and size
     std::shared_ptr<SDL_Rect> m_CollisionBox;
@@ -90,6 +97,7 @@ protected:
 
     friend class AnimationParser;
 
+    bool m_HitScored {false};     // Current attack action (Hit) already scored a hit
 };
 
 

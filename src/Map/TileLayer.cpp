@@ -12,25 +12,25 @@ TileLayer::TileLayer(int tilesize, int rowcount, int colcount, const TileMap& ti
     m_Front     {front}
 {
     for (int k {0}; k < static_cast<int>(m_Tilesets.size()); k++)
-        TextureManager::getInstance()->Load(m_Tilesets.at(k).Name, "../assets/Maps/" + m_Tilesets.at(k).Source, m_ColCount*m_TileSize, m_RowCount*m_TileSize);
+        TextureManager::getInstance().Load(m_Tilesets.at(k).Name, "../assets/Maps/" + m_Tilesets.at(k).Source, m_ColCount*m_TileSize, m_RowCount*m_TileSize);
 
     LayerType = TILE;
 }
 
-TileLayer::TileLayer(TileLayer&& layer):
-    m_TileSize  {layer.m_TileSize},
-    m_RowCount  {layer.m_RowCount},
-    m_ColCount  {layer.m_ColCount},
-    m_TileMap   {layer.m_TileMap},
-    m_Tilesets  {layer.m_Tilesets},
-    m_Collision {layer.m_Collision},
-    m_Front     {layer.m_Front}
-{
-    for (int k {0}; k < static_cast<int>(m_Tilesets.size()); k++)
-        TextureManager::getInstance()->Load(m_Tilesets.at(k).Name, "../assets/Maps/" + m_Tilesets.at(k).Source, m_ColCount*m_TileSize, m_RowCount*m_TileSize);
+// TileLayer::TileLayer(TileLayer&& layer):
+//     m_TileSize  {layer.m_TileSize},
+//     m_RowCount  {layer.m_RowCount},
+//     m_ColCount  {layer.m_ColCount},
+//     m_TileMap   {layer.m_TileMap},
+//     m_Tilesets  {layer.m_Tilesets},
+//     m_Collision {layer.m_Collision},
+//     m_Front     {layer.m_Front}
+// {
+//     for (int k {0}; k < static_cast<int>(m_Tilesets.size()); k++)
+//         TextureManager::getInstance().Load(m_Tilesets.at(k).Name, "../assets/Maps/" + m_Tilesets.at(k).Source, m_ColCount*m_TileSize, m_RowCount*m_TileSize);
 
-    LayerType = TILE;
-}
+//     LayerType = TILE;
+// }
 
 
 void TileLayer::Render()
@@ -70,7 +70,7 @@ void TileLayer::Render()
                 tileCol = ts.ColCount-1;
             }
 
-            TextureManager::getInstance()->DrawTile(ts.Name, col * m_TileSize, row * m_TileSize, m_TileSize, tileRow, tileCol);
+            TextureManager::getInstance().DrawTile(ts.Name, col * m_TileSize, row * m_TileSize, m_TileSize, tileRow, tileCol);
         }
     
 }

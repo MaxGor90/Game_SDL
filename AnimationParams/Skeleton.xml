@@ -9,15 +9,17 @@
     time - time per animation frame (1 / speed)
     x, y, width, height - collision box parameters inside the frame
     atkCol* - attack collision box parameters inside the frame (collision box for hit detection)
+    hitFrameStart - starting frame of hit window
+    hitFrames - number of frames in hit window
 -->
 
   <animation name="idle" row="4" count="4" start="0" time="160" x="40" y="14" width="33" height="66"/>
   <animation name="run" row="3" count="12" start="0" time="80" x="40" y="14" width="33" height="66"/>
   <animation name="hurt" row="4" count="3" start="5" time="120" x="40" y="14" width="33" height="66"/>
   <animation name="attack1" row="1" count="7" start="0" time="60" x="40" y="14" width="33" height="66"
-             atkColX="27" atkColY="0" atkColW="101" atkColH="56"/>
+             atkColX="27" atkColY="0" atkColW="101" atkColH="56" hitFrameStart="4" hitFrames="2"/>
   <animation name="attack2" row="1" count="6" start="7" time="60" x="40" y="14" width="33" height="66" 
-             atkColX="4" atkColY="16" atkColW="124" atkColH="48"/>
+             atkColX="4" atkColY="16" atkColW="124" atkColH="48" hitFrameStart="8" hitFrames="2"/>
   <animation name="fall" row="1" count="1" start="0" time="160" x="40" y="14" width="33" height="66"/>
  </animations>
 </root>

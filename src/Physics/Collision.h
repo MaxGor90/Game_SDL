@@ -11,26 +11,25 @@
 
 class Collision
 {
-    static std::shared_ptr<Collision> s_CollisionInstance;
+    Collision();
+    ~Collision()
+    {}
 
     std::vector<std::shared_ptr<TileMap>> m_CollisionMaps;
 
 public:
 
-    Collision();
-    ~Collision()
-    {}
 
-    static bool CheckCollision(std::shared_ptr<SDL_Rect> collisionBox1, std::shared_ptr<SDL_Rect> collisionBox2);
+    static bool CheckCollision(std::shared_ptr<SDL_Rect> collisionBox1, std::shared_ptr<SDL_Rect> collisionBox2, int overlapX = 0, int overlapY = 0);
     bool CollisionWithMapX(std::shared_ptr<Transform>* position, std::shared_ptr<SDL_Rect> collisionBox);
     bool CollisionWithMapY(std::shared_ptr<Transform>* position, std::shared_ptr<SDL_Rect> collisionBox);
 
 
-    inline static std::shared_ptr<Collision> GetInstance()  {
-        return s_CollisionInstance = (s_CollisionInstance == nullptr)? std::make_shared<Collision>() : s_CollisionInstance;
+    inline static Collision& getInstance()  
+    {
+        static Collision CollisionInstance;
+        return CollisionInstance;
     }
-
-
 
 };
 

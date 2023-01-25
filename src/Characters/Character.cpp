@@ -4,6 +4,7 @@
 #include "tinyxml2.h"
 #include "Engine.h"
 #include "SDL.h"
+#include "Collision.h"
 
 
 Character::Character(std::shared_ptr<ObjParams> params) try :
@@ -85,8 +86,8 @@ void Character::SetParams(std::shared_ptr<AnimationSequence> animSequence, SDL_R
     
     if (animSequence->getAttackCollisionBox() != nullptr)
         m_CollisionBoxAtkInsideFrame = animSequence->getAttackCollisionBox();
-    m_Width = TextureManager::getInstance()->GetTextureWidth(m_TextureID);
-    m_Height = TextureManager::getInstance()->GetTextureHeight(m_TextureID);
+    m_Width = TextureManager::getInstance().GetTextureWidth(m_TextureID);
+    m_Height = TextureManager::getInstance().GetTextureHeight(m_TextureID);
 
     CollisionBoxRecalc();
 }
@@ -106,8 +107,8 @@ void Character::CheckPosition()
     //  If yes - keep it within bounds
     if (m_Transform->m_X < -m_CollisionBoxInsideFrame->x)  m_Transform->m_X = -m_CollisionBoxInsideFrame->x;
     if (m_Transform->m_Y < -m_CollisionBoxInsideFrame->y)  m_Transform->m_Y = -m_CollisionBoxInsideFrame->y;
-    if (m_Transform->m_X > Engine::getInstance()->getMap()->getMapLength() - m_Width + m_CollisionBoxInsideFrame->x)  
-        m_Transform->m_X = Engine::getInstance()->getMap()->getMapLength() - m_Width + m_CollisionBoxInsideFrame->x;
+    if (m_Transform->m_X > Engine::getInstance().getMap()->getMapLength() - m_Width + m_CollisionBoxInsideFrame->x)  
+        m_Transform->m_X = Engine::getInstance().getMap()->getMapLength() - m_Width + m_CollisionBoxInsideFrame->x;
     if (m_Transform->m_Y > SCREEN_HEIGHT - m_Height)  m_Transform->m_Y = SCREEN_HEIGHT - m_Height;
 }
 
@@ -188,7 +189,7 @@ bool Character::CheckCollisions()
     PositionRecalc();
 
     //  Check if there will still be collision in that position
-    if (m_Collision->GetInstance()->CollisionWithMapX(&m_Transform, m_CollisionBox))
+    if (m_Collision.getInstance().CollisionWithMapX(&m_Transform, m_CollisionBox))
     {
         //  If yes - stop moving and position is getting corrected by CollisionWithMapX
         //  Recalc m_pos and collision box 
@@ -198,7 +199,7 @@ bool Character::CheckCollisions()
     }
 
     //  Same for collsiion with Y                                      
-    if (m_Collision->GetInstance()->CollisionWithMapY(&m_Transform, m_CollisionBox))
+    if (m_Collision.getInstance().CollisionWithMapY(&m_Transform, m_CollisionBox))
     {
         m_RigidBody->StopY();
         PositionRecalc();

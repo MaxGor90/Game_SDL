@@ -1,5 +1,5 @@
-#ifndef H_ENGINE
-#define H_ENGINE
+#ifndef ENGINE_H
+#define ENGINE_H
 
 #include "SDL.h"
 #include "SDL_image.h"
@@ -13,26 +13,27 @@
 
 class Engine
 {
+    Engine();
+    ~Engine();
+
     SDL_Window* m_Window {nullptr};
     SDL_Renderer* m_Renderer {nullptr};
 
     std::shared_ptr<GameMap> m_LevelMap;
     std::shared_ptr<Character> m_Player {nullptr};
     friend class AI;
+    friend class Battle;
 
     std::vector<std::shared_ptr<Character>> m_Enemies;
     std::shared_ptr<EnemySpawner> m_EnemySpawner;
     friend class EnemySpawner;
 
-    static std::shared_ptr<Engine> s_EngineInstance;
     bool m_isRunning;
 
 public:
 
-    Engine();
-    ~Engine();
 
-    static std::shared_ptr<Engine> getInstance();   // Engine getter
+    static Engine& getInstance();   // Engine singleton getter
 
     std::shared_ptr<GameMap> getMap()   { return m_LevelMap; };
     
@@ -51,4 +52,4 @@ public:
 };
 
 
-#endif /* H_ENGINE */
+#endif /* ENGINE_H */

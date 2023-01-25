@@ -3,12 +3,14 @@
 #include "Timer.h"
 #include "Engine.h"
 #include "Collision.h"
+#include "Battle.h"
+#include "Global.h"
 
 
 
 AI::AI(BehaviorType behaveType) : Behavior { behaveType }
 {
-    player = Engine::getInstance()->m_Player;
+    player = Engine::getInstance().m_Player;
 }
 
 void AI::Update(Enemy* enemy) 
@@ -74,7 +76,10 @@ void AI::ScanAround(Enemy* enemy)
     if (!enemy->isAggroed)
     {
         if (playerIsInSight(enemy))
+        {
             enemy->SetAggroed();
+            Battle::getInstance().addEnemy(enemy);
+        }
         return;
     }
 
@@ -95,6 +100,7 @@ void AI::ScanAround(Enemy* enemy)
          (!playerIsInSight(enemy)) )
     {
         enemy->SetNotAggroed();
+        Battle::getInstance().deleteEnemy(enemy);
         enemy->spawnX = enemyPos;
     }
 }
@@ -123,7 +129,7 @@ bool AI::TimePassed(int time, bool random, float minMultiplier, float maxMultipl
     // Seting variables once at the start of waiting cycle
     if (waitingStartTime == 0)
     {
-        waitingStartTime = Timer::getInstance()->GetLastTime();
+        waitingStartTime = Timer::getInstance().GetLastTime();
         waitingTime = time;
     
         if (random)
@@ -131,7 +137,7 @@ bool AI::TimePassed(int time, bool random, float minMultiplier, float maxMultipl
     }
 
     // Reseting variables at the end of the waiting cycle
-    if (Timer::getInstance()->GetLastTime() >= waitingStartTime + waitingTime)
+    if (Timer::getInstance().GetLastTime() >= waitingStartTime + waitingTime)
     {
         waitingStartTime = 0;
         waitingTime = 0;
@@ -143,7 +149,7 @@ bool AI::TimePassed(int time, bool random, float minMultiplier, float maxMultipl
 
 bool AI::AttackCooldownPassed(Enemy* enemy)
 {
-    return (Timer::getInstance()->GetLastTime() >= enemy->m_AttackEnds + attackCooldown_ms);
+    return (Timer::getInstance().GetLastTime() >= enemy->m_AttackEnds + attackCooldown_ms);
 }
 
 bool AI::playerIsInSight(Enemy* enemy)
@@ -192,6 +198,6 @@ bool AI::playerIsInSight(Enemy* enemy)
 bool AI::playerIsInAttackRange(Enemy* enemy)
 {
     enemy->CollisionBoxAtkRecalc();
-    return Collision::CheckCollision(enemy->m_CollisionBoxAtk, player->GetCollisionBox());
+    return Collision::CheckCollision(enemy->m_CollisionBoxAtk, player->GetCollisionBox(), attackOverlapX);
 }
 

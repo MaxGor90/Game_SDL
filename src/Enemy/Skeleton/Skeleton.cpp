@@ -28,14 +28,15 @@ void Skeleton::Attack()
     case HIT_1:
         CheckDirectionSetParams(m_AnimationSequences.at("attack1"));          
         if (m_Animation->UpdateSingle(true))        
-            m_AttackEnds = Timer::getInstance()->GetLastTime();
+            m_AttackEnds = Timer::getInstance().GetLastTime();
         if (m_Animation->IsRepeating())
         {
             isVulnerable = true;
+            SetHitScored(false);
             // if (hurt) idle;
             // if (player is out of sight) idle;
 
-            if (Timer::getInstance()->GetLastTime() - m_AttackEnds >= m_TimeBetweenAttacks)
+            if (Timer::getInstance().GetLastTime() - m_AttackEnds >= m_TimeBetweenAttacks)
             {
                 m_ComboState = HIT_2;
                 m_Animation->SetAnimIsOver();
@@ -47,8 +48,9 @@ void Skeleton::Attack()
         CheckDirectionSetParams(m_AnimationSequences.at("attack2"));        
         if (m_Animation->UpdateSingle(false))
         {        
+            SetHitScored(false);
             m_Condition = Falling;
-            m_AttackEnds = Timer::getInstance()->GetLastTime();
+            m_AttackEnds = Timer::getInstance().GetLastTime();
         }
         break;
     case HIT_3:

@@ -25,6 +25,7 @@ public:
     }
 
     bool IsRepeating() { return m_IsRepeating; }
+    bool IsHitFrame();
 
 private:
 

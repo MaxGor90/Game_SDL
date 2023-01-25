@@ -3,9 +3,6 @@
 
 
 
-std::shared_ptr<Timer> Timer::s_TimerInstance {nullptr};
-
-
 void Timer::Tick()
 {
     m_DeltaTime = ((float)SDL_GetTicks64() - m_LastTime) * ((float)TARGET_FPS / 1000.0f); // DeltaTime in frames with TARGET_FPS

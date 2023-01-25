@@ -14,13 +14,11 @@ Knight::Knight(std::shared_ptr<ObjParams> params) :
     m_Animation = std::make_unique<Animation>();
 
     m_RigidBody = std::make_unique<RigidBody>();
-    
-    m_Collision = Collision::GetInstance();
 }
 
 Knight::~Knight()
 {
-    Clean();
+    // Clean();
 }
 
 
@@ -75,22 +73,22 @@ void Knight::Idle(float dt)
 
     m_ComboState = NO;
 
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_A) ||
-         Input::getInstance()->isKeyDown(SDL_SCANCODE_D) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_A) ||
+         Input::getInstance().isKeyDown(SDL_SCANCODE_D) )
     {
         m_Condition = Running;
         Run(dt);
         return;
     }
     
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_LSHIFT) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_LSHIFT) )
     {
         m_Condition = Rolling;
         Roll(dt);
         return;
     }
 
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_SPACE) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_SPACE) )
     {
         m_Condition = Jumping;
         m_RigidBody->ApplyForceY(m_JumpSpeedInFrames / TARGET_FPS * UPWARD);
@@ -98,7 +96,7 @@ void Knight::Idle(float dt)
         return;
     }
 
-    if (Input::getInstance()->isMouseButtonDown(MOUSE_LB) && m_ComboState == NO)
+    if (Input::getInstance().isMouseButtonDown(MOUSE_LB) && m_ComboState == NO)
     {
         m_Condition = Attacking;
         m_ComboState = HIT_1;
@@ -106,7 +104,7 @@ void Knight::Idle(float dt)
         return;
     }
 
-    if ( Input::getInstance()->isMouseButtonDown(MOUSE_RB) )
+    if ( Input::getInstance().isMouseButtonDown(MOUSE_RB) )
     {
         m_Condition = Blocking;
         Block();
@@ -122,9 +120,9 @@ void Knight::Run(float dt)
 {
     m_RigidBody->UnsetForce();
 
-    if (Input::getInstance()->isKeyDown(SDL_SCANCODE_D))
+    if (Input::getInstance().isKeyDown(SDL_SCANCODE_D))
         SetDirection(forward);
-    else if (Input::getInstance()->isKeyDown(SDL_SCANCODE_A))
+    else if (Input::getInstance().isKeyDown(SDL_SCANCODE_A))
         SetDirection(backward);
     else
     {
@@ -146,21 +144,21 @@ void Knight::Run(float dt)
         break;
     }
 
-    if (!m_Collision->GetInstance()->CollisionWithMapY(&m_Transform, m_CollisionBox))
+    if (!m_Collision.getInstance().CollisionWithMapY(&m_Transform, m_CollisionBox))
     {
         m_Condition = Falling;
         Fall(dt);
         return;
     }
 
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_LSHIFT) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_LSHIFT) )
     {
         m_Condition = Rolling;
         Roll(dt);
         return;
     }
     
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_SPACE) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_SPACE) )
     {
         m_Condition = Jumping;
         m_RigidBody->ApplyForceY(m_JumpSpeedInFrames / TARGET_FPS * UPWARD);
@@ -168,7 +166,7 @@ void Knight::Run(float dt)
         return;
     }
 
-    if ( Input::getInstance()->isMouseButtonDown(MOUSE_LB) )
+    if ( Input::getInstance().isMouseButtonDown(MOUSE_LB) )
     {
         m_Condition = Attacking;
         m_ComboState = HIT_1;
@@ -176,7 +174,7 @@ void Knight::Run(float dt)
         return;
     }
 
-    if ( Input::getInstance()->isMouseButtonDown(MOUSE_RB) )
+    if ( Input::getInstance().isMouseButtonDown(MOUSE_RB) )
     {
         m_Condition = Blocking;
         Block();
@@ -209,7 +207,7 @@ void Knight::Roll(float dt)
 
     CollisionBoxRecalc();
 
-    if (!m_Collision->GetInstance()->CollisionWithMapY(&m_Transform, m_CollisionBox))
+    if (!m_Collision.getInstance().CollisionWithMapY(&m_Transform, m_CollisionBox))
     {
         m_Animation->SetAnimIsOver();
         m_Condition = Falling;
@@ -233,18 +231,18 @@ void Knight::Jump(float dt)
 
     m_IsInAir = true;
         
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_A) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_A) )
     {
         m_RigidBody->ApplyForceX(m_RunSpeedInFrames * 0.8f / TARGET_FPS * BACKWARD);
         SetDirection(backward);
     }
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_D) )    
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_D) )    
     {
         m_RigidBody->ApplyForceX(m_RunSpeedInFrames * 0.8f / TARGET_FPS * FORWARD);
         SetDirection(forward);
     }
 
-    if (Input::getInstance()->isMouseButtonDown(MOUSE_LB) && m_ComboState == NO)
+    if (Input::getInstance().isMouseButtonDown(MOUSE_LB) && m_ComboState == NO)
     {
         m_Animation->SetAnimIsOver();
         m_ComboState = HIT_1;
@@ -275,18 +273,18 @@ void Knight::Fall(float dt)
 
     m_RigidBody->UnsetForce();
 
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_A) )
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_A) )
     {
         m_RigidBody->ApplyForceX(m_RunSpeedInFrames * 0.8f / TARGET_FPS * BACKWARD);
         SetDirection(backward);
     }
-    if ( Input::getInstance()->isKeyDown(SDL_SCANCODE_D) )    
+    if ( Input::getInstance().isKeyDown(SDL_SCANCODE_D) )    
     {
         m_RigidBody->ApplyForceX(m_RunSpeedInFrames * 0.8f  / TARGET_FPS * FORWARD);
         SetDirection(forward);
     }
 
-    if (Input::getInstance()->isMouseButtonDown(MOUSE_LB) && m_ComboState == NO)
+    if (Input::getInstance().isMouseButtonDown(MOUSE_LB) && m_ComboState == NO)
     {
         m_ComboState = HIT_1;
         m_Condition = Attacking;
@@ -316,23 +314,26 @@ void Knight::Attack()
     case HIT_1:
         CheckDirectionSetParams(m_AnimationSequences.at("attack1"));          //  Attack_1
         if (m_Animation->UpdateSingle(true))        //  Attack ends and pending time for next attack begins
-            m_AttackEnds = Timer::getInstance()->GetLastTime();
+        {
+            m_AttackEnds = Timer::getInstance().GetLastTime();
+            SetHitScored(false);
+        }
         if (m_Animation->IsRepeating()) 
         {
-            if (Timer::getInstance()->GetLastTime() - m_AttackEnds <= (m_IsInAir? m_TimeBetweenAttacksInAir : m_TimeBetweenAttacks))
+            if (Timer::getInstance().GetLastTime() - m_AttackEnds <= (m_IsInAir? m_TimeBetweenAttacksInAir : m_TimeBetweenAttacks))
             {
-                if (Input::getInstance()->isMouseButtonDown(MOUSE_LB))
+                if (Input::getInstance().isMouseButtonDown(MOUSE_LB))
                 {
                     m_ComboState = HIT_2;
                     m_Animation->SetAnimIsOver();
                     return;
                 }
                 //  Any action except attack interrupts combo
-                if (Input::getInstance()->isKeyDown(SDL_SCANCODE_A)         || 
-                    Input::getInstance()->isKeyDown(SDL_SCANCODE_D)         || 
-                    Input::getInstance()->isKeyDown(SDL_SCANCODE_SPACE)     || 
-                    Input::getInstance()->isKeyDown(SDL_SCANCODE_LSHIFT)    || 
-                    Input::getInstance()->isMouseButtonDown(MOUSE_RB)) 
+                if (Input::getInstance().isKeyDown(SDL_SCANCODE_A)         || 
+                    Input::getInstance().isKeyDown(SDL_SCANCODE_D)         || 
+                    Input::getInstance().isKeyDown(SDL_SCANCODE_SPACE)     || 
+                    Input::getInstance().isKeyDown(SDL_SCANCODE_LSHIFT)    || 
+                    Input::getInstance().isMouseButtonDown(MOUSE_RB)) 
                 {
                     m_Condition = Falling;          //  Not Idle because you Stop() in Idle and can perform various actions in the air
                     m_Animation->SetAnimIsOver();
@@ -350,22 +351,25 @@ void Knight::Attack()
     case HIT_2:
         CheckDirectionSetParams(m_AnimationSequences.at("attack2"));          //  Attack_2
         if (m_Animation->UpdateSingle(true))        //  Attack ends and pending time for next attack begins
-            m_AttackEnds = Timer::getInstance()->GetLastTime();
+        {    
+            m_AttackEnds = Timer::getInstance().GetLastTime();
+            SetHitScored(false);
+        }
         if (m_Animation->IsRepeating()) 
         {
-            if (Timer::getInstance()->GetLastTime() - m_AttackEnds <= (m_IsInAir? m_TimeBetweenAttacksInAir : m_TimeBetweenAttacks))
+            if (Timer::getInstance().GetLastTime() - m_AttackEnds <= (m_IsInAir? m_TimeBetweenAttacksInAir : m_TimeBetweenAttacks))
             {
-                if (Input::getInstance()->isMouseButtonDown(MOUSE_LB))
+                if (Input::getInstance().isMouseButtonDown(MOUSE_LB))
                 {
                     m_ComboState = HIT_3;
                     m_Animation->SetAnimIsOver();
                     return;
                 }
-                if (Input::getInstance()->isKeyDown(SDL_SCANCODE_A) || 
-                    Input::getInstance()->isKeyDown(SDL_SCANCODE_D) || 
-                    Input::getInstance()->isKeyDown(SDL_SCANCODE_SPACE) || 
-                    Input::getInstance()->isKeyDown(SDL_SCANCODE_LSHIFT) || 
-                    Input::getInstance()->isMouseButtonDown(MOUSE_RB)) 
+                if (Input::getInstance().isKeyDown(SDL_SCANCODE_A) || 
+                    Input::getInstance().isKeyDown(SDL_SCANCODE_D) || 
+                    Input::getInstance().isKeyDown(SDL_SCANCODE_SPACE) || 
+                    Input::getInstance().isKeyDown(SDL_SCANCODE_LSHIFT) || 
+                    Input::getInstance().isMouseButtonDown(MOUSE_RB)) 
                 {
                     m_Condition = Falling;
                     m_Animation->SetAnimIsOver();
@@ -382,7 +386,10 @@ void Knight::Attack()
     case HIT_3:
         CheckDirectionSetParams(m_AnimationSequences.at("attack3"));          //  Attack_3
         if (m_Animation->UpdateSingle())
+        {    
             m_Condition = Falling;
+            SetHitScored(false);
+        }
         break;
     
     case NO:
@@ -402,7 +409,7 @@ void Knight::Block()
     CheckDirectionSetParams(m_AnimationSequences.at("block"));
 
 
-    if (!Input::getInstance()->isMouseButtonDown(MOUSE_RB))
+    if (!Input::getInstance().isMouseButtonDown(MOUSE_RB))
     {
         m_Condition = Falling;
         return;
@@ -424,7 +431,7 @@ void Knight::Hurt()
 
 void Knight::Clean()
 {
-    TextureManager::getInstance()->Drop(m_TextureID);
+    TextureManager::getInstance().Drop(m_TextureID);
 }
 
 
