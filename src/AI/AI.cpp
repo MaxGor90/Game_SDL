@@ -15,9 +15,9 @@ AI::AI(BehaviorType behaveType) : Behavior { behaveType }
 
 void AI::Update(Enemy* enemy) 
 {
-    if (enemy->m_Condition == Character::Condition::Attacking || 
-        enemy->m_Condition == Character::Condition::Falling ||
-        enemy->m_Condition == Character::Condition::isHurt)
+    if (enemy->GetCondition() == Character::Condition::Attacking || 
+        enemy->GetCondition() == Character::Condition::Falling ||
+        enemy->GetCondition() == Character::Condition::isHurt)
     {
         return;
     }
@@ -50,11 +50,11 @@ void AI::Patrole(Enemy* enemy)
 {
     using Condition = Enemy::Condition;
     
-    if (enemy->m_Condition == Condition::IsIdle)
+    if (enemy->GetCondition() == Condition::IsIdle)
     {
         if (TimePassed(patrollingWaitingTime_ms, true, 0.8, 1.5))
         {
-            enemy->m_Condition = Condition::Running;
+            enemy->SetCondition(Condition::Running);
             enemy->ChangeDirection();
         }
         return;
@@ -109,18 +109,18 @@ void AI::ScanAround(Enemy* enemy)
 
 void AI::Run(Enemy* enemy)
 {
-    enemy->m_Condition = Enemy::Condition::Running;
+    enemy->SetCondition(Character::Condition::Running);
 }
 
 void AI::Attack(Enemy* enemy)
 {
-    enemy->m_Condition = Enemy::Condition::Attacking;
+    enemy->SetCondition(Enemy::Condition::Attacking);
     enemy->m_ComboState = Character::ComboState::HIT_1;
 }
 
 void AI::Idle(Enemy* enemy)
 {
-    enemy->m_Condition = Enemy::Condition::IsIdle;
+    enemy->SetCondition(Enemy::Condition::IsIdle);
 }
 
 

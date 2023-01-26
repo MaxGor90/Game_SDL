@@ -39,17 +39,23 @@ void Battle::CheckPlayerIsHit(Enemy* enemy)
         return;
     if (enemy->GetHitScored())
         return;
-    if (Player->GetCondition() == Character::Condition::Blocking)
+
+    if (!Collision::CheckCollision(Player->GetCollisionBox(), enemy->GetCollisionBoxAtk(), attackOverlapX))
+    {    
         return;
-    if (Collision::CheckCollision(Player->GetCollisionBox(), enemy->GetCollisionBoxAtk(), attackOverlapX))
+    }
+
+    if ((Player->GetCondition() == Character::Condition::Blocking) && CheckPlayerFacesEnemy(enemy))
     {
-        Player->SetCondition(Character::Condition::isHurt);
-        enemy->SetHitScored(true);
+        Player->SetHitBlocked(true);
         return;
     }
     
+    Player->SetCondition(Character::Condition::isHurt);
+    enemy->SetHitScored(true);
     return;
 }
+
 
 void Battle::CheckEnemyIsHit(Enemy* enemy)
 {
@@ -65,4 +71,19 @@ void Battle::CheckEnemyIsHit(Enemy* enemy)
     }
 
     return;
+}
+
+bool Battle::CheckPlayerFacesEnemy(Enemy* enemy)
+{
+    using Direction = Character::Direction;
+    
+    switch (Player->GetDirection())
+    {
+    case Direction::forward:
+        return (Player->GetPosition()->X < enemy->GetPosition()->X);
+    case Direction::backward:
+        return (Player->GetPosition()->X > enemy->GetPosition()->X);
+    default:
+        return false;
+    }
 }

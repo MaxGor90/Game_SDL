@@ -34,6 +34,7 @@ public:
     void Update();
     void CheckPlayerIsHit(Enemy* enemy);
     void CheckEnemyIsHit(Enemy* enemy);
+    bool CheckPlayerFacesEnemy(Enemy* enemy);
 
 };
 #endif /* BATTLE_H */

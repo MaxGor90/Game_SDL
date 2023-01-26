@@ -406,6 +406,22 @@ void Knight::Block()
     m_RigidBody->Stop();
     m_RigidBody->UnsetForce();
 
+    if (m_HitBlocked)
+    {
+        m_Animation->SetAnimIsOver();
+        SetHitBlocked(false);
+        m_HitBlockedEffect = true;
+    }
+    if (m_HitBlockedEffect)
+    {
+        CheckDirectionSetParams(m_AnimationSequences.at("blockHit"));
+        if (m_Animation->UpdateSingle())
+        {
+            m_HitBlockedEffect = false;
+        }
+        return;
+    }
+
     CheckDirectionSetParams(m_AnimationSequences.at("block"));
 
 

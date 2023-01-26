@@ -61,9 +61,9 @@ void Animation::Draw(float x, float y)
 
 void Animation::SetParams(const std::string& textureID, std::shared_ptr<AnimationSequence> animSequence, SDL_RendererFlip flip)
 {
-    m_TextureID = textureID;
     if (m_AnimSequence != animSequence)
     {
+        m_TextureID = textureID;
         SetAnimIsOver();
         m_AnimSequence = animSequence;
     }

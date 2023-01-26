@@ -49,11 +49,12 @@ public:
     virtual void Update(float dt) = 0;
     virtual void Clean() = 0;
 
-    void SetDirection(Direction dir) { m_Direction = dir; }
-    void ChangeDirection();
+    virtual Direction GetDirection() { return m_Direction; }
+    virtual void SetDirection(Direction dir) { m_Direction = dir; }
+    virtual void ChangeDirection();
 
-    std::string GetAnimParamsSource();
-    void LoadAnimations(const std::string& fileSource);
+    virtual std::string GetAnimParamsSource();
+    virtual void LoadAnimations(const std::string& fileSource);
 
     virtual void SetParams(std::shared_ptr<AnimationSequence>, SDL_RendererFlip flip = SDL_FLIP_NONE);
     virtual void CollisionBoxRecalc();
@@ -65,12 +66,14 @@ public:
 
     virtual std::shared_ptr<SDL_Rect> GetCollisionBox() { return m_CollisionBox; }
     virtual std::shared_ptr<SDL_Rect> GetCollisionBoxAtk() { return m_CollisionBoxAtk; }
+    
     virtual Condition GetCondition() { return m_Condition; }
     virtual void SetCondition(Condition condition) { m_Condition = condition; }
 
     virtual void SetHitScored(bool scored) { m_HitScored = scored; }
     virtual bool GetHitScored() { return m_HitScored; }
     virtual bool IsHittingFrames() { return m_Animation->IsHitFrame(); }
+    virtual void SetHitBlocked(bool blocked) { m_HitBlocked = blocked; }
     
 
 protected:
@@ -97,7 +100,13 @@ protected:
 
     friend class AnimationParser;
 
-    bool m_HitScored {false};     // Current attack action (Hit) already scored a hit
+    bool m_HitScored {false};       // Current attack action (Hit) already scored a hit
+    
+    // For animating hit blocks faster than single block animation is done we need two variables:
+    // One for hit in block signal, that will be reset right after receiving
+    // Another for animating cycle
+    bool m_HitBlocked {false};      // Received a hit while in Blocking condition
+    bool m_HitBlockedEffect {false};    
 };
 
 
